@@ -62,7 +62,7 @@ public class PlayerControl : MonoBehaviour
     private void Move()
     {
         isGround = CheckGrounded();
-        Debug.Log(isGround);
+        //Debug.Log(isGround);
         if (moveX != 0 || moveZ != 0) //if inputing
         {
             if (moveSpeedCurrent < moveSpeed_Max) moveSpeedCurrent += moveSpeed * Time.deltaTime;
