@@ -13,6 +13,7 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] float moveSpeed = 0.7f;
     [SerializeField] float Jumpforce = 10;
     [SerializeField] float GravityS = 1;
+    [SerializeField] GameObject FireParticles; 
 
     private float moveSpeedCurrent = 0;
 
@@ -43,6 +44,7 @@ public class PlayerControl : MonoBehaviour
     {
         anim = this.gameObject.GetComponent<Animator>();
         control = this.gameObject.GetComponent<CharacterController>();
+        FireParticles = GameObject.FindGameObjectWithTag("Fire"); 
     }
 
     private void Update()
@@ -52,6 +54,10 @@ public class PlayerControl : MonoBehaviour
         Move();
     }
 
+    private void ShootFire()
+    {
+        FireParticles.SetActive(true); 
+    }
     private void GetInputs()
     {
         moveX = Input.GetAxisRaw("Horizontal");
