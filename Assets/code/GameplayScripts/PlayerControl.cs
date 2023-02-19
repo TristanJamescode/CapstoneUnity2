@@ -58,7 +58,7 @@ public class PlayerControl : MonoBehaviour
 
     private void ShootFire()
     {
-        if(Input.GetButtonDown("F"))
+        if(Input.GetButtonDown("Fire1"))
         {
             FireParticles.SetActive(true);
         }
