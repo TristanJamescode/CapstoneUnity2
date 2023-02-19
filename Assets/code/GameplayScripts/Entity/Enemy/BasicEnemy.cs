@@ -19,18 +19,8 @@ public class BasicEnemy : BasicEntity
     bool alreadyAttacked;
     //States
     public float sightRange, attackRange;
-    public bool playerInSightRange, playerInAttackRange = false;
-    public ENEMYSTATE enemystate = ENEMYSTATE.IDLE;
-    StateMachine stateMachine;
-    public enum ENEMYSTATE{
-        IDLE,
-        PATROL,
-        NOTICE,
-        CHASING,
-        ATTACKING,
-        STAGGER
-    }
-
+    protected StateMachine stateMachine;
+    public string Statename;
     protected class IdleState : BaseState
     {
         BasicEnemy enemy;
@@ -38,13 +28,33 @@ public class BasicEnemy : BasicEntity
         {
             this.enemy = enemy;
         }
+        public override void Update()
+        {
+            enemy.agent.SetDestination(enemy.transform.position);
+        }
     }
     protected class PatrolState : BaseState
     {
+        int giveupcount=0;
         BasicEnemy enemy;
         public PatrolState(BasicEnemy enemy, string name, StateMachine stateMachine) : base(name, stateMachine)
         {
             this.enemy = enemy;
+        }
+        public override void OnEnter()
+        {
+            enemy.walkPointSet = false;
+            for (int i= 0; i < giveupcount; i++){
+                if (enemy.SearchRandomWalkPoint())
+                {
+                    enemy.walkPointSet = true;
+                    return;
+                }
+            }
+        }
+        public override void Update()
+        {
+            if(enemy.walkPointSet)enemy.agent.SetDestination(enemy.walkPoint);
         }
     }
     protected class ChasingState : BaseState
@@ -54,6 +64,11 @@ public class BasicEnemy : BasicEntity
         {
             this.enemy = enemy;
         }
+        public override void Update()
+        {
+                enemy.agent.SetDestination(enemy.Player.position);
+                enemy.transform.LookAt(enemy.Player);
+        }
     }
     protected class AttackingState : BaseState
     {
@@ -62,117 +77,81 @@ public class BasicEnemy : BasicEntity
         {
             this.enemy = enemy;
         }
+        public override void Update()
+        {
+            enemy.agent.SetDestination(enemy.transform.position);
+            enemy.transform.LookAt(enemy.Player);
+            if (!enemy.alreadyAttacked)
+            {
+                enemy.alreadyAttacked = true;
+            }
+        }
     }
-    protected class IdleToPatrol : Transaction
+    protected class C_IsPlayerInRange : TransactionCondition
+    {
+        float Range=0;
+        BasicEnemy enemy;
+        public C_IsPlayerInRange(BasicEnemy enemy, float Range)
+        {
+            this.Range = Range;
+            this.enemy = enemy;
+        }
+        public override bool TriggerCheck()
+        {
+            return Physics.CheckSphere(enemy.transform.position, Range, enemy.whatIsPlayer);
+        }
+    }
+    protected class C_IsAttackFinished : TransactionCondition
     {
         BasicEnemy enemy;
-        public IdleToPatrol(BasicEnemy enemy, BaseState nextState) : base(nextState)
+        public C_IsAttackFinished(BasicEnemy enemy)
         {
             this.enemy = enemy;
         }
-        public override bool CheckTransaction()
+        public override bool TriggerCheck()
         {
-            return true;
+            return (enemy.alreadyAttacked);
         }
     }
-    protected class IdleToChasing : Transaction
+    protected class C_IsReachedtoWalkPoint: TransactionCondition
     {
         BasicEnemy enemy;
-        public IdleToChasing(BasicEnemy enemy, BaseState nextState) : base(nextState)
+        public C_IsReachedtoWalkPoint(BasicEnemy enemy)
         {
             this.enemy = enemy;
         }
-        public override bool CheckTransaction()
+        public override bool TriggerCheck()
         {
-            return true;
+            bool returnbool=false;
+            if ((enemy.transform.position - enemy.walkPoint).magnitude < 1f) //PATROL TO IDLE 
+            {
+                enemy.walkPointSet = false;//Walkpoint reached
+                returnbool = true;
+            }
+            return returnbool;
         }
     }
-    protected class PatrolToChasing : Transaction
+    protected virtual void Awake()
     {
-        BasicEnemy enemy;
-        public PatrolToChasing(BasicEnemy enemy, BaseState nextState) : base(nextState)
-        {
-            this.enemy = enemy;
-        }
-        public override bool CheckTransaction()
-        {
-            return true;
-        }
-    }
-    protected class PatrolToIdle : Transaction
-    {
-        BasicEnemy enemy;
-        public PatrolToIdle(BasicEnemy enemy, BaseState nextState) : base(nextState)
-        {
-            this.enemy = enemy;
-        }
-        public override bool CheckTransaction()
-        {
-            return true;
-        }
-    }
-    protected class ChasingToAttacking : Transaction
-    {
-        BasicEnemy enemy;
-        public ChasingToAttacking(BasicEnemy enemy, BaseState nextState) : base(nextState)
-        {
-            this.enemy = enemy;
-        }
-        public override bool CheckTransaction()
-        {
-            return true;
-        }
-    }
-    protected class ChasingToIdle : Transaction
-    {
-        BasicEnemy enemy;
-        public ChasingToIdle(BasicEnemy enemy, BaseState nextState) : base(nextState)
-        {
-            this.enemy = enemy;
-        }
-        public override bool CheckTransaction()
-        {
-            return true;
-        }
-    }
-    protected class AttackingToChasing : Transaction
-    {
-        BasicEnemy enemy;
-        public AttackingToChasing(BasicEnemy enemy, BaseState nextState) : base(nextState)
-        {
-            this.enemy = enemy;
-        }
-        public override bool CheckTransaction()
-        {
-            return true;
-        }
-    }
-    protected class AttackingToIdle : Transaction
-    {
-        BasicEnemy enemy;
-        public AttackingToIdle(BasicEnemy enemy, BaseState nextState) : base(nextState)
-        {
-            this.enemy = enemy;
-        }
-        public override bool CheckTransaction()
-        {
-            return true;
-        }
-    }
-    protected void Awake()
-    {
+        stateMachine = gameObject.AddComponent<StateMachine>();
+
         BaseState Idle = new IdleState(this,"Idle", stateMachine);
         BaseState Patrol = new PatrolState(this,"Patrol", stateMachine);
         BaseState Chasing = new ChasingState(this,"Chasing", stateMachine);
         BaseState Attacking = new AttackingState(this,"Attacking", stateMachine);
-        Transaction idletopatrol = new IdleToPatrol(this,Patrol);
-        Transaction idletochasing = new IdleToChasing(this, Chasing);
-        Transaction patroltochasing = new PatrolToChasing(this, Chasing);
-        Transaction patroltoidle = new PatrolToIdle(this, Idle);
-        Transaction chasingtoattacking = new ChasingToAttacking(this, Attacking);
-        Transaction chasingtoidle = new ChasingToIdle(this, Idle);
-        Transaction attackingtochasing = new AttackingToChasing(this, Chasing);
-        Transaction attackingtoidle = new AttackingToIdle(this, Idle);
+
+        Transaction idletopatrol = new(Patrol);
+        Transaction idletochasing = new(Chasing);
+        Transaction patroltochasing = new(Chasing);
+        Transaction patroltoidle = new(Idle);
+        Transaction chasingtoattacking = new(Attacking);
+        Transaction chasingtoidle = new(Idle);
+        Transaction attackingtochasing = new(Chasing);
+        Transaction attackingtoidle = new(Idle);
+
+        TransactionCondition c_IsPlayerInSight = new C_IsPlayerInRange(this, sightRange);
+        TransactionCondition c_IsPlayerInAttack = new C_IsPlayerInRange(this, attackRange);
+        TransactionCondition c_IsPlayerInLostRange = new C_IsPlayerInRange(this, sightRange*1.1f);
 
         Idle.addTransaction(idletopatrol);
         Idle.addTransaction(idletochasing);
@@ -183,81 +162,32 @@ public class BasicEnemy : BasicEntity
         Attacking.addTransaction(attackingtoidle);
         Attacking.addTransaction(attackingtochasing);
 
+        idletochasing.addCondition(c_IsPlayerInSight,true);
+        patroltochasing.addCondition(c_IsPlayerInSight,true);
+        chasingtoattacking.addCondition(c_IsPlayerInAttack,true);
+        chasingtoidle.addCondition(c_IsPlayerInLostRange, false);
+        attackingtochasing.addCondition(c_IsPlayerInAttack, false);
+        attackingtoidle.addCondition(c_IsPlayerInLostRange, false);
+
         Player = GameObject.FindGameObjectWithTag("Player").transform;
         agent = GetComponent<NavMeshAgent>();
+        stateMachine.setInitState(Idle);
     }
 
     protected override void Update()
     {
         stateMachine.Update();
-        TransactionCheck();
-        RunState();
+        Statename = stateMachine.currentState.name;
     }
-
-    protected virtual void RunState()
-    {
-        switch (enemystate)
-        {
-            case ENEMYSTATE.IDLE:
-                break;
-            case ENEMYSTATE.PATROL:
-                if (!walkPointSet) { SearchRandomWalkPoint(); }
-                else { agent.SetDestination(walkPoint); }
-                break;
-            case ENEMYSTATE.CHASING:
-                agent.SetDestination(Player.position);
-                transform.LookAt(Player);
-                break;
-            case ENEMYSTATE.ATTACKING:
-                agent.SetDestination(transform.position);
-                transform.LookAt(Player);
-                if (!alreadyAttacked)
-                {
-                    alreadyAttacked = true;
-                }
-                break;
-            default:
-                break;
-        }
-    }
-    protected virtual void SearchRandomWalkPoint()
+    protected virtual bool SearchRandomWalkPoint()
     {
         float randomZ = Random.Range(-walkPointRange, walkPointRange);
         float randomX = Random.Range(-walkPointRange, walkPointRange);
         walkPoint = new Vector3(transform.position.x + randomX, transform.position.y, transform.position.z+randomZ);
         if (Physics.Raycast(walkPoint, -transform.up, 2f, whatIsGround))
         {
-            walkPointSet = true;
+            return true;
         }
-    }
-    protected virtual void TransactionCheck()
-    {
-        playerInSightRange = Physics.CheckSphere(transform.position, sightRange, whatIsPlayer);
-        playerInAttackRange = Physics.CheckSphere(transform.position, attackRange, whatIsPlayer);
-        switch (enemystate)
-        {
-            case ENEMYSTATE.IDLE:
-                if (!playerInSightRange&&Random.Range(0,10)==0) enemystate = ENEMYSTATE.PATROL; //IDLE TO PATROL
-                if (playerInSightRange || playerInAttackRange) enemystate = ENEMYSTATE.CHASING; //IDLE TO CHASING
-                break;
-            case ENEMYSTATE.PATROL:
-                if (playerInSightRange && !playerInAttackRange) enemystate = ENEMYSTATE.CHASING; //PATROL TO CHASING
-                if ((transform.position - walkPoint).magnitude < 1f) //PATROL TO IDLE 
-                {
-                    walkPointSet = false;//Walkpoint reached
-                    enemystate = ENEMYSTATE.IDLE;
-                }
-                break;
-            case ENEMYSTATE.CHASING:
-                if (!playerInSightRange) enemystate = ENEMYSTATE.IDLE; //CHASING TO IDLE
-                if (playerInAttackRange) enemystate = ENEMYSTATE.ATTACKING; //CHASING TO ATTACK
-
-                break;
-            case ENEMYSTATE.ATTACKING:
-                if (!playerInAttackRange&&alreadyAttacked) enemystate = ENEMYSTATE.CHASING; //ATTACKING TO CHASING
-                break;
-            default:
-                break;
-        }
+        return false;
     }
 }

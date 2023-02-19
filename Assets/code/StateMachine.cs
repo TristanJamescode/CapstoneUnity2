@@ -6,12 +6,17 @@ using UnityEngine;
 /// </summary>
 public class StateMachine : MonoBehaviour
 {
-    BaseState currentState = null;
+    public BaseState currentState = null;
+    public void setInitState(BaseState initState)
+    {
+        currentState = initState;
+    }
     public void Update()
     {
         if (currentState != null)
         {
             currentState.Update();
+            //Debug.Log("currentstate is "+currentState.name);
             currentState.Transactions();
         }
     }
@@ -20,13 +25,14 @@ public class StateMachine : MonoBehaviour
         currentState.OnExit();
         currentState = newState;
         currentState.OnEnter();
+        //Debug.Log("Changed to " + currentState.name);
     }
 }
 public class BaseState
 {
     public string name;
     protected StateMachine stateMachine;
-    List<Transaction> transactions= new List<Transaction>();
+    private List<Transaction> transactions= new List<Transaction>();
     public BaseState(string name, StateMachine stateMachine)
     {
         this.name = name;
@@ -43,6 +49,7 @@ public class BaseState
             if (transaction.CheckTransaction())
             {
                 stateMachine.ChangeState(transaction.TransactionSuccess());
+                return;
             }
         }
         return;
@@ -55,19 +62,33 @@ public class BaseState
 
 public class Transaction
 {
+    private List<TransactionCondition> triggers = new List<TransactionCondition>();
     private BaseState nextState;
     public Transaction(BaseState nextState)
     {
+        //this.trigger = trigger;
         this.nextState = nextState;
     }
     public virtual bool CheckTransaction()
     {
-        return false;
+        bool returnbool = true;
+        foreach(TransactionCondition trigger in triggers) //all trigger must be complished
+        {
+            if (trigger.needTrue != trigger.TriggerCheck()) returnbool = false;
+        }
+        return returnbool;
     }
     public virtual BaseState TransactionSuccess() {
         return nextState;
     }
+    public void addCondition(TransactionCondition condition,bool needTrue)
+    {
+        condition.needTrue = needTrue;
+        this.triggers.Add(condition);
+    }
 }
-public class Trigger
+abstract public class TransactionCondition
 {
+    public bool needTrue;
+    abstract public bool TriggerCheck();
 }
