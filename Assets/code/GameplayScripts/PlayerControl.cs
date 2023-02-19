@@ -52,11 +52,17 @@ public class PlayerControl : MonoBehaviour
         GetInputs();
 
         Move();
+
+        ShootFire(); 
     }
 
     private void ShootFire()
     {
-        FireParticles.SetActive(true); 
+        if(Input.GetButtonDown("F"))
+        {
+            FireParticles.SetActive(true);
+        }
+         
     }
     private void GetInputs()
     {
