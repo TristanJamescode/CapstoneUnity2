@@ -15,17 +15,13 @@ public class BasicEnemy : BasicEntity
     bool walkPointSet = false;
     public float walkPointRange;
     //Attack
+    protected float timeToAttack = 0.0f;
     public float timeBetweenAttacks=3.0f;
-    bool alreadyAttacked;
+    public bool attack_ready;
     //States
     public float sightRange, attackRange;
     protected StateMachine stateMachine;
     public string Statename;
-    //Projectile
-    public GameObject bullet;
-    public float shootForce;
-    [SerializeField]
-    GameObject shootingPoint;
     protected class IdleState : BaseState
     {
         BasicEnemy enemy;
@@ -84,11 +80,11 @@ public class BasicEnemy : BasicEntity
         }
         public override void OnEnter()
         {
-            enemy.alreadyAttacked = false;
+            enemy.attack_ready = false;
         }
         public override void Update()
         {
-            if(!enemy.alreadyAttacked)enemy.AttackPlayer();
+            enemy.AttackPlayer();
         }
     }
     protected class C_IsPlayerInRange : TransactionCondition
@@ -114,7 +110,7 @@ public class BasicEnemy : BasicEntity
         }
         public override bool TriggerCheck()
         {
-            return (enemy.alreadyAttacked);
+            return (enemy.attack_ready);
         }
     }
     protected class C_IsReachedtoWalkPoint: TransactionCondition
@@ -198,21 +194,6 @@ public class BasicEnemy : BasicEntity
     }
     protected virtual bool AttackPlayer()
     {
-        agent.SetDestination(transform.position);
-        if (timeBetweenAttacks < 0.0f)
-        {
-            Vector3 direction = transform.rotation * Vector3.forward;
-            GameObject currentBullet = Instantiate(bullet, shootingPoint.transform.position, Quaternion.identity);
-            currentBullet.transform.rotation = transform.rotation;
-            currentBullet.GetComponent<Rigidbody>().AddForce(direction * shootForce, ForceMode.Impulse);
-            alreadyAttacked = true;
-            return true;
-        }
-        else
-        {
-            timeBetweenAttacks -= Time.deltaTime;
-            return false;
-        }
-        
+        return false;     
     }
 }

@@ -16,7 +16,6 @@ public class StateMachine : MonoBehaviour
         if (currentState != null)
         {
             currentState.Update();
-            //Debug.Log("currentstate is "+currentState.name);
             currentState.Transactions();
         }
     }
@@ -25,7 +24,6 @@ public class StateMachine : MonoBehaviour
         currentState.OnExit();
         currentState = newState;
         currentState.OnEnter();
-        //Debug.Log("Changed to " + currentState.name);
     }
 }
 public class BaseState

@@ -3,51 +3,40 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 public class Enemy_Spitter : BasicEnemy
-{
+{    //Projectile
+    //Projectile
+    public GameObject bullet;
+    public float shootForce;
+    [SerializeField]
+    GameObject shootingPoint;
     protected override void Awake()
     {
-        stateMachine = gameObject.AddComponent<StateMachine>();
-
-        BaseState Idle = new IdleState(this, "Idle", stateMachine);
-        BaseState Patrol = new PatrolState(this, "Patrol", stateMachine);
-        BaseState Chasing = new ChasingState(this, "Chasing", stateMachine);
-        BaseState Attacking = new AttackingState(this, "Attacking", stateMachine);
-
-        Transaction idletopatrol = new(Patrol);
-        Transaction idletochasing = new(Chasing);
-        Transaction patroltochasing = new(Chasing);
-        Transaction patroltoidle = new(Idle);
-        Transaction chasingtoattacking = new(Attacking);
-        Transaction chasingtoidle = new(Idle);
-        Transaction attackingtochasing = new(Chasing);
-        Transaction attackingtoidle = new(Idle);
-
-        TransactionCondition c_IsPlayerInSight = new C_IsPlayerInRange(this, sightRange);
-        TransactionCondition c_IsPlayerInAttack = new C_IsPlayerInRange(this, attackRange);
-        TransactionCondition c_IsPlayerInLostRange = new C_IsPlayerInRange(this, sightRange * 1.1f);
-
-        Idle.addTransaction(idletopatrol);
-        Idle.addTransaction(idletochasing);
-        Patrol.addTransaction(patroltochasing);
-        Patrol.addTransaction(patroltoidle);
-        Chasing.addTransaction(chasingtoattacking);
-        Chasing.addTransaction(chasingtoidle);
-        Attacking.addTransaction(attackingtoidle);
-        Attacking.addTransaction(attackingtochasing);
-
-        idletochasing.addCondition(c_IsPlayerInSight, true);
-        patroltochasing.addCondition(c_IsPlayerInSight, true);
-        chasingtoattacking.addCondition(c_IsPlayerInAttack, true);
-        chasingtoidle.addCondition(c_IsPlayerInLostRange, false);
-        attackingtochasing.addCondition(c_IsPlayerInAttack, false);
-        attackingtoidle.addCondition(c_IsPlayerInLostRange, false);
-
-        Player = GameObject.FindGameObjectWithTag("Player").transform;
-        agent = GetComponent<NavMeshAgent>();
-        stateMachine.setInitState(Idle);
+        base.Awake();
     }
     protected override void Update()
     {
         base.Update();
+    }
+    protected override bool AttackPlayer()
+    {
+        agent.SetDestination(transform.position); //Make Enemy does not move
+        transform.LookAt(Player);
+        if (attack_ready)
+        {
+            timeToAttack = timeBetweenAttacks;
+            Vector3 direction = transform.rotation * Vector3.forward;
+            GameObject currentBullet = Instantiate(bullet, shootingPoint.transform.position, Quaternion.identity);
+            currentBullet.transform.rotation = transform.rotation;
+            currentBullet.GetComponent<Rigidbody>().AddForce(direction * shootForce, ForceMode.Impulse);
+            attack_ready = false;
+            return true;
+        }
+        else
+        {
+            timeToAttack -= Time.deltaTime;
+            if (timeToAttack < 0) attack_ready = true;
+            return false;
+        }
+
     }
 }

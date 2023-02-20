@@ -30,7 +30,7 @@ public class BasicProjectile : BasicEntity
     }
     protected override void Update()
     {
-        if (collisions > collisions_max) OnDeath();
+        //if (collisions < collisions_max) OnDeath();
         maxLifetime -= Time.deltaTime;
         if (maxLifetime < 0) OnDeath();
     }
@@ -55,6 +55,6 @@ public class BasicProjectile : BasicEntity
         physics_mat.bounceCombine = PhysicMaterialCombine.Maximum;
 
         GetComponent<SphereCollider>().material = physics_mat;
-
+        GetComponent<Rigidbody>().useGravity = useGravity;
     }
 }

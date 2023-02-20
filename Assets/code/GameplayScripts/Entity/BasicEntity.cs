@@ -8,10 +8,10 @@ using UnityEngine;
 /// </summary>
 public class BasicEntity : MonoBehaviour
 {
-    protected float Health = 100; // Health
-    protected float Health_Max = 100; // Health Max
-    protected int InvincibilityFrame = 0;
-    protected bool Invincible = false;
+    public float Health = 100; // Health
+    public float Health_Max = 100; // Health Max
+    public int InvincibilityFrame = 0;
+    public bool Invincible = false;
 
     protected virtual void Update()
     {
@@ -43,6 +43,6 @@ public class BasicEntity : MonoBehaviour
 
     protected virtual void OnDeath()
     {
-        Destroy(this);
+        Object.Destroy(this.gameObject);
     }
 }

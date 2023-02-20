@@ -141,7 +141,7 @@ GameObject:
   - component: {fileID: 7092862734954859703}
   - component: {fileID: 7092862734954859702}
   - component: {fileID: 7092862734954859707}
-  - component: {fileID: 7092862734954859706}
+  - component: {fileID: 5095681362598513815}
   m_Layer: 6
   m_Name: EnemySpitter
   m_TagString: Untagged
@@ -251,7 +251,7 @@ NavMeshAgent:
   m_BaseOffset: 0.5
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
---- !u!114 &7092862734954859706
+--- !u!114 &5095681362598513815
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -260,9 +260,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 7092862734954859697}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e15df264a83007f49abca05e3543d0ed, type: 3}
+  m_Script: {fileID: 11500000, guid: f79b31f46826d7443b6be3b69a2744cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Health: 100
+  Health_Max: 100
+  InvincibilityFrame: 0
+  Invincible: 0
   agent: {fileID: 7092862734954859707}
   Player: {fileID: 0}
   whatIsGround:
@@ -272,11 +276,12 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 8
   walkPoint: {x: 0, y: 0, z: 0}
-  walkPointRange: 6
-  timeBetweenAttacks: 4
+  walkPointRange: 0
+  timeBetweenAttacks: 3
+  attack_ready: 0
   sightRange: 10
   attackRange: 5
   Statename: 
   bullet: {fileID: 4893935830295956983, guid: 645130835016279499b2dcfad068dd53, type: 3}
-  shootForce: 10
+  shootForce: 2.3
   shootingPoint: {fileID: 6400543672838475030}
