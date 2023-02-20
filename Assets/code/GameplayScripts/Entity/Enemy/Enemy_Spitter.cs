@@ -46,4 +46,8 @@ public class Enemy_Spitter : BasicEnemy
         agent = GetComponent<NavMeshAgent>();
         stateMachine.setInitState(Idle);
     }
+    protected override void Update()
+    {
+        base.Update();
+    }
 }

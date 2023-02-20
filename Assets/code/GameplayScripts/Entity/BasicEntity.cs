@@ -8,8 +8,8 @@ using UnityEngine;
 /// </summary>
 public class BasicEntity : MonoBehaviour
 {
-    protected int Health = 10; // Health
-    protected int Health_Max = 10; // Health Max
+    protected float Health = 100; // Health
+    protected float Health_Max = 100; // Health Max
     protected int InvincibilityFrame = 0;
     protected bool Invincible = false;
 
@@ -29,13 +29,13 @@ public class BasicEntity : MonoBehaviour
         Invincible = IsInvicible;
     }
 
-    protected virtual void Take_Damage(int Damage_)
+    public virtual void Take_Damage(float Damage_)
     {
         Health -= Damage_;
         if (Health < 0) OnDeath();
     }
 
-    protected virtual void Take_Heal(int Heal_)
+    protected virtual void Take_Heal(float Heal_)
     {
         Health += Heal_;
         if (Health> Health_Max) Health = Health_Max;

@@ -15,12 +15,17 @@ public class BasicEnemy : BasicEntity
     bool walkPointSet = false;
     public float walkPointRange;
     //Attack
-    public float timeBetweenAttacks;
+    public float timeBetweenAttacks=3.0f;
     bool alreadyAttacked;
     //States
     public float sightRange, attackRange;
     protected StateMachine stateMachine;
     public string Statename;
+    //Projectile
+    public GameObject bullet;
+    public float shootForce;
+    [SerializeField]
+    GameObject shootingPoint;
     protected class IdleState : BaseState
     {
         BasicEnemy enemy;
@@ -77,14 +82,13 @@ public class BasicEnemy : BasicEntity
         {
             this.enemy = enemy;
         }
+        public override void OnEnter()
+        {
+            enemy.alreadyAttacked = false;
+        }
         public override void Update()
         {
-            enemy.agent.SetDestination(enemy.transform.position);
-            enemy.transform.LookAt(enemy.Player);
-            if (!enemy.alreadyAttacked)
-            {
-                enemy.alreadyAttacked = true;
-            }
+            if(!enemy.alreadyAttacked)enemy.AttackPlayer();
         }
     }
     protected class C_IsPlayerInRange : TransactionCondition
@@ -151,7 +155,9 @@ public class BasicEnemy : BasicEntity
 
         TransactionCondition c_IsPlayerInSight = new C_IsPlayerInRange(this, sightRange);
         TransactionCondition c_IsPlayerInAttack = new C_IsPlayerInRange(this, attackRange);
+        TransactionCondition c_IsPlayerInLostAttack = new C_IsPlayerInRange(this, (attackRange+sightRange)/2);
         TransactionCondition c_IsPlayerInLostRange = new C_IsPlayerInRange(this, sightRange*1.1f);
+        TransactionCondition c_IsAttackFinished = new C_IsAttackFinished(this);
 
         Idle.addTransaction(idletopatrol);
         Idle.addTransaction(idletochasing);
@@ -166,14 +172,14 @@ public class BasicEnemy : BasicEntity
         patroltochasing.addCondition(c_IsPlayerInSight,true);
         chasingtoattacking.addCondition(c_IsPlayerInAttack,true);
         chasingtoidle.addCondition(c_IsPlayerInLostRange, false);
-        attackingtochasing.addCondition(c_IsPlayerInAttack, false);
+        attackingtochasing.addCondition(c_IsPlayerInLostAttack, false);
+        attackingtochasing.addCondition(c_IsAttackFinished, true);
         attackingtoidle.addCondition(c_IsPlayerInLostRange, false);
 
         Player = GameObject.FindGameObjectWithTag("Player").transform;
         agent = GetComponent<NavMeshAgent>();
         stateMachine.setInitState(Idle);
     }
-
     protected override void Update()
     {
         stateMachine.Update();
@@ -189,5 +195,24 @@ public class BasicEnemy : BasicEntity
             return true;
         }
         return false;
+    }
+    protected virtual bool AttackPlayer()
+    {
+        agent.SetDestination(transform.position);
+        if (timeBetweenAttacks < 0.0f)
+        {
+            Vector3 direction = transform.rotation * Vector3.forward;
+            GameObject currentBullet = Instantiate(bullet, shootingPoint.transform.position, Quaternion.identity);
+            currentBullet.transform.rotation = transform.rotation;
+            currentBullet.GetComponent<Rigidbody>().AddForce(direction * shootForce, ForceMode.Impulse);
+            alreadyAttacked = true;
+            return true;
+        }
+        else
+        {
+            timeBetweenAttacks -= Time.deltaTime;
+            return false;
+        }
+        
     }
 }

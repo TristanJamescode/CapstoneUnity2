@@ -71,7 +71,8 @@ public class Transaction
     }
     public virtual bool CheckTransaction()
     {
-        bool returnbool = true;
+        bool returnbool = false;
+        if (triggers.Count > 0) returnbool = true;
         foreach(TransactionCondition trigger in triggers) //all trigger must be complished
         {
             if (trigger.needTrue != trigger.TriggerCheck()) returnbool = false;
