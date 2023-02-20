@@ -133,6 +133,7 @@ public class BasicEnemy : BasicEntity
     }
     protected virtual void Awake()
     {
+        if (Player == null) { Player = GameObject.FindGameObjectWithTag("Player").transform; }
         stateMachine = gameObject.AddComponent<StateMachine>();
 
         BaseState Idle = new IdleState(this,"Idle", stateMachine);

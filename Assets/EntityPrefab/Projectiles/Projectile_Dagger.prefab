@@ -13,10 +13,9 @@ GameObject:
   - component: {fileID: 4893935830295956981}
   - component: {fileID: 4893935830295956982}
   - component: {fileID: 5867735866063387272}
-  - component: {fileID: 1583641255157886632}
-  - component: {fileID: 1496732503394841785}
+  - component: {fileID: 8676997788198066728}
   m_Layer: 7
-  m_Name: Projectile_SpitBall
+  m_Name: Projectile_Dagger
   m_TagString: Projectile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -31,7 +30,7 @@ Transform:
   m_GameObject: {fileID: 4893935830295956983}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.09365871, y: 0.12259619, z: 0.9863534}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -44,7 +43,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4893935830295956983}
-  m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &4893935830295956981
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -116,7 +115,7 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 1
---- !u!114 &1583641255157886632
+--- !u!114 &8676997788198066728
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -125,7 +124,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 4893935830295956983}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13a0302baa6d257419eb12cd5200ff85, type: 3}
+  m_Script: {fileID: 11500000, guid: 9581e9e714d3dde46b8d5e0ea2312581, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Health: 100
@@ -134,27 +133,17 @@ MonoBehaviour:
   Invincible: 0
   whatIsEnemies:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 0
   whatIsPlayer:
     serializedVersion: 2
-    m_Bits: 8
+    m_Bits: 0
   bounciness: 0
   useGravity: 0
-  collisions_max: 3
+  collisions_max: 0
   collisions: 0
   maxLifetime: 10
-  projectilefrom: 1
+  projectilefrom: 0
   Projectile_Damage: 10
---- !u!114 &1496732503394841785
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4893935830295956983}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5ecd7fbd1c5dfa84291431d9c9d17484, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damageAmount: 5
+  PokeDistance: 0
+  PokeTime: 1
+  TransformUser: {fileID: 0}
