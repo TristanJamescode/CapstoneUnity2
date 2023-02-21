@@ -123,11 +123,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &3622723 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5670316727318152163, guid: 952fd4e6e648aa04e96716ed1874073f, type: 3}
-  m_PrefabInstance: {fileID: 8823192140409049821}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &53189670
 GameObject:
   m_ObjectHideFlags: 0
@@ -1581,11 +1576,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 74ad2b04313ad9440bd44e0f341ae9b0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed_Max: 5
-  moveSpeed: 10
-  Jumpforce: 20
-  GravityS: 1
-  FireParticles: {fileID: 3622723}
+  playerSpeed: 2
+  jumpHeight: 1
+  gravityValue: -9.81
 --- !u!4 &852974376 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7965759694781659845, guid: e95455346f40059438c133a4d2ab4573, type: 3}
