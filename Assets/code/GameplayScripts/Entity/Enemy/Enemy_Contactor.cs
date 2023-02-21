@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Enemy_Contactor : BasicEnemy
 {
-    public float PokeDistance = 0.3f;
+    public float PokeDistance = 0.7f;
     public Projectile_Poke Projectile;
     protected override void Awake()
     {
@@ -26,14 +26,17 @@ public class Enemy_Contactor : BasicEnemy
             Projectile_Poke currentBullet = Instantiate(Projectile, transform.position, Quaternion.identity);
             currentBullet.transform.rotation = transform.rotation;
             currentBullet.PokeDistance = PokeDistance;
-            currentBullet.maxLifetime = 0.8f;
+            currentBullet.maxLifetime = 10f;
             currentBullet.TransformUser = this.transform;
-            currentBullet.GetComponent<Rigidbody>().AddForce(direction * 1.2f, ForceMode.Impulse);
+            currentBullet.PokeTime = 0.4f;
+            currentBullet.Projectile_Damage = 1.0f;
+            attack_finished = true;
             attack_ready = false;
             return true;
         }
         else
         {
+            attack_finished = false;
             timeToAttack -= Time.deltaTime;
             if (timeToAttack < 0) attack_ready = true;
             return false;

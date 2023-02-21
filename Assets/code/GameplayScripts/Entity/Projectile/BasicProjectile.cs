@@ -34,7 +34,7 @@ public class BasicProjectile : BasicEntity
         maxLifetime -= Time.deltaTime;
         if (maxLifetime < 0) OnDeath();
     }
-    protected override void OnDeath()
+    public override void OnDeath()
     {
         base.OnDeath();
     }
@@ -47,7 +47,7 @@ public class BasicProjectile : BasicEntity
             OnDeath();
         }
     }
-    private void Setup()
+    private protected void Setup()
     {
         physics_mat = new PhysicMaterial();
         physics_mat.bounciness = bounciness;

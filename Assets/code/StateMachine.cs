@@ -22,6 +22,7 @@ public class StateMachine : MonoBehaviour
     public void ChangeState(BaseState newState)
     {
         currentState.OnExit();
+        //Debug.Log(currentState.name + " to " + newState.name);
         currentState = newState;
         currentState.OnEnter();
     }
@@ -47,17 +48,15 @@ public class BaseState
             if (transaction.CheckTransaction())
             {
                 stateMachine.ChangeState(transaction.TransactionSuccess());
-                return;
+                break;
             }
         }
-        return;
     }
     public void addTransaction(Transaction transaction)
     {
         this.transactions.Add(transaction);
     }
 }
-
 public class Transaction
 {
     private List<TransactionCondition> triggers = new List<TransactionCondition>();

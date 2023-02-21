@@ -278,9 +278,10 @@ MonoBehaviour:
   walkPoint: {x: 0, y: 0, z: 0}
   walkPointRange: 0
   timeBetweenAttacks: 3
-  attack_ready: 0
   sightRange: 10
+  lostRange: 20
   attackRange: 5
+  TimetoLostEntity: 3
   Statename: 
   bullet: {fileID: 4893935830295956983, guid: 645130835016279499b2dcfad068dd53, type: 3}
   shootForce: 2.3

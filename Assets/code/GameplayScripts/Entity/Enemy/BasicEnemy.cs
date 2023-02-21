@@ -17,9 +17,12 @@ public class BasicEnemy : BasicEntity
     //Attack
     protected float timeToAttack = 0.0f;
     public float timeBetweenAttacks=3.0f;
-    public bool attack_ready;
+    protected bool attack_ready;
+    protected bool attack_finished;
     //States
-    public float sightRange, attackRange;
+    public float attackRange,sightRange,lostRange;
+    protected float TimetoLost = 0.0f;
+    public float TimetoLostEntity=3.0f;
     protected StateMachine stateMachine;
     public string Statename;
     protected class IdleState : BaseState
@@ -65,10 +68,23 @@ public class BasicEnemy : BasicEntity
         {
             this.enemy = enemy;
         }
+        public override void OnEnter()
+        {
+            enemy.TimetoLost = enemy.TimetoLostEntity;
+        }
         public override void Update()
         {
-                enemy.agent.SetDestination(enemy.Player.position);
-                enemy.transform.LookAt(enemy.Player);
+            if (enemy.IsPlayerBetweenSightandLost())
+            {
+                enemy.TimetoLost -= Time.deltaTime;
+            }
+            else
+            {
+                enemy.TimetoLost = enemy.TimetoLostEntity;
+            }
+            enemy.agent.SetDestination(enemy.Player.position);
+            Vector3 lookatpos = new Vector3(enemy.Player.position.x, enemy.transform.position.y, enemy.Player.position.z);
+            enemy.transform.LookAt(lookatpos);
         }
     }
     protected class AttackingState : BaseState
@@ -80,6 +96,7 @@ public class BasicEnemy : BasicEntity
         }
         public override void OnEnter()
         {
+            enemy.attack_finished = false;
             enemy.attack_ready = false;
         }
         public override void Update()
@@ -89,8 +106,8 @@ public class BasicEnemy : BasicEntity
     }
     protected class C_IsPlayerInRange : TransactionCondition
     {
-        float Range=0;
-        BasicEnemy enemy;
+        protected float Range=0;
+        protected BasicEnemy enemy;
         public C_IsPlayerInRange(BasicEnemy enemy, float Range)
         {
             this.Range = Range;
@@ -98,7 +115,9 @@ public class BasicEnemy : BasicEntity
         }
         public override bool TriggerCheck()
         {
-            return Physics.CheckSphere(enemy.transform.position, Range, enemy.whatIsPlayer);
+            bool returnbool= Physics.CheckSphere(enemy.transform.position, Range, enemy.whatIsPlayer);
+            //if (returnbool) Debug.Log(Range);
+            return returnbool;
         }
     }
     protected class C_IsAttackFinished : TransactionCondition
@@ -110,7 +129,19 @@ public class BasicEnemy : BasicEntity
         }
         public override bool TriggerCheck()
         {
-            return (enemy.attack_ready);
+            return (enemy.attack_finished);
+        }
+    }
+    protected class C_IsTimetoLost: TransactionCondition
+    {
+        BasicEnemy enemy;
+        public C_IsTimetoLost(BasicEnemy enemy)
+        {
+            this.enemy = enemy;
+        }
+        public override bool TriggerCheck()
+        {
+            return (enemy.TimetoLost < 0);
         }
     }
     protected class C_IsReachedtoWalkPoint: TransactionCondition
@@ -133,7 +164,7 @@ public class BasicEnemy : BasicEntity
     }
     protected virtual void Awake()
     {
-        if (Player == null) { Player = GameObject.FindGameObjectWithTag("Player").transform; }
+        if (Player == null && GameObject.FindGameObjectWithTag("Player")!=null) { Player = GameObject.FindGameObjectWithTag("Player").transform; } //Find Player if exists
         stateMachine = gameObject.AddComponent<StateMachine>();
 
         BaseState Idle = new IdleState(this,"Idle", stateMachine);
@@ -147,14 +178,16 @@ public class BasicEnemy : BasicEntity
         Transaction patroltoidle = new(Idle);
         Transaction chasingtoattacking = new(Attacking);
         Transaction chasingtoidle = new(Idle);
+        Transaction chasingtoidle2 = new(Idle);
         Transaction attackingtochasing = new(Chasing);
         Transaction attackingtoidle = new(Idle);
 
-        TransactionCondition c_IsPlayerInSight = new C_IsPlayerInRange(this, sightRange);
-        TransactionCondition c_IsPlayerInAttack = new C_IsPlayerInRange(this, attackRange);
-        TransactionCondition c_IsPlayerInLostAttack = new C_IsPlayerInRange(this, (attackRange+sightRange)/2);
-        TransactionCondition c_IsPlayerInLostRange = new C_IsPlayerInRange(this, sightRange*1.1f);
-        TransactionCondition c_IsAttackFinished = new C_IsAttackFinished(this);
+        TransactionCondition c_IsPlayerInAttackRange = new C_IsPlayerInRange(this, attackRange);
+        TransactionCondition c_IsPlayerInAttackOutRange = new C_IsPlayerInRange(this, attackRange*1.1f);
+        TransactionCondition c_IsPlayerInSightRange = new C_IsPlayerInRange(this, sightRange);
+        TransactionCondition c_IsPlayerInLostRange = new C_IsPlayerInRange(this, lostRange);
+        //TransactionCondition c_IsAttackFinished = new C_IsAttackFinished(this);
+        TransactionCondition c_IsTimetoLost = new C_IsTimetoLost(this);
 
         Idle.addTransaction(idletopatrol);
         Idle.addTransaction(idletochasing);
@@ -162,15 +195,18 @@ public class BasicEnemy : BasicEntity
         Patrol.addTransaction(patroltoidle);
         Chasing.addTransaction(chasingtoattacking);
         Chasing.addTransaction(chasingtoidle);
+        Chasing.addTransaction(chasingtoidle2);
         Attacking.addTransaction(attackingtoidle);
         Attacking.addTransaction(attackingtochasing);
 
-        idletochasing.addCondition(c_IsPlayerInSight,true);
-        patroltochasing.addCondition(c_IsPlayerInSight,true);
-        chasingtoattacking.addCondition(c_IsPlayerInAttack,true);
+        idletochasing.addCondition(c_IsPlayerInSightRange, true);
+        patroltochasing.addCondition(c_IsPlayerInSightRange, true);
+        chasingtoattacking.addCondition(c_IsPlayerInAttackRange, true);
+        //chasingtoattacking.addCondition(c_IsPlayerInSightRange, false);
         chasingtoidle.addCondition(c_IsPlayerInLostRange, false);
-        attackingtochasing.addCondition(c_IsPlayerInLostAttack, false);
-        attackingtochasing.addCondition(c_IsAttackFinished, true);
+        chasingtoidle2.addCondition(c_IsTimetoLost, true);
+        //attackingtochasing.addCondition(c_IsAttackFinished, true);
+        attackingtochasing.addCondition(c_IsPlayerInAttackOutRange, false);
         attackingtoidle.addCondition(c_IsPlayerInLostRange, false);
 
         Player = GameObject.FindGameObjectWithTag("Player").transform;
@@ -179,6 +215,7 @@ public class BasicEnemy : BasicEntity
     }
     protected override void Update()
     {
+        base.Update();
         stateMachine.Update();
         Statename = stateMachine.currentState.name;
     }
@@ -196,5 +233,11 @@ public class BasicEnemy : BasicEntity
     protected virtual bool AttackPlayer()
     {
         return false;     
+    }
+    protected virtual bool IsPlayerBetweenSightandLost()
+    {
+        return (Physics.CheckSphere(transform.position, sightRange, whatIsPlayer) 
+            && !Physics.CheckSphere(transform.position, lostRange, whatIsPlayer));
+
     }
 }

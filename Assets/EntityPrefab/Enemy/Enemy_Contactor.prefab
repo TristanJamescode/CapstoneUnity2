@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7258745674717000134}
   - component: {fileID: 4991381187482941522}
   - component: {fileID: 2247371256934527137}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Head
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -111,9 +111,9 @@ GameObject:
   - component: {fileID: 4821486647655231531}
   - component: {fileID: -8655459301068961054}
   - component: {fileID: 679910012565685661}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Enemy_Contactor
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -234,8 +234,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Health: 100
   Health_Max: 100
-  InvincibilityFrame: 0
-  Invincible: 0
+  Invincible_Time: 0
   agent: {fileID: -8655459301068961054}
   Player: {fileID: 0}
   whatIsGround:
@@ -247,8 +246,10 @@ MonoBehaviour:
   walkPoint: {x: 0, y: 0, z: 0}
   walkPointRange: 0
   timeBetweenAttacks: 1
-  attack_ready: 0
+  attackRange: 1
   sightRange: 10
-  attackRange: 2
+  lostRange: 13
+  TimetoLostEntity: 3
   Statename: 
+  PokeDistance: 0.8
   Projectile: {fileID: 8676997788198066728, guid: ef27d8591e1d31841aaeec390c08afb1, type: 3}

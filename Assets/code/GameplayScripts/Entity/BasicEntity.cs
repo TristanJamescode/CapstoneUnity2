@@ -10,8 +10,8 @@ public class BasicEntity : MonoBehaviour
 {
     public float Health = 100; // Health
     public float Health_Max = 100; // Health Max
-    public int InvincibilityFrame = 0;
-    public bool Invincible = false;
+    public float Invincible_Time = 0;
+    protected bool Invincible = false;
 
     protected virtual void Update()
     {
@@ -21,9 +21,9 @@ public class BasicEntity : MonoBehaviour
     protected virtual void Update_InvincibilityFrame()
     {
         bool IsInvicible = false;
-        if (InvincibilityFrame > 0)
+        if (Invincible_Time > 0)
         {
-            InvincibilityFrame--;
+            Invincible_Time--;
             IsInvicible = true;
         }
         Invincible = IsInvicible;
@@ -35,13 +35,13 @@ public class BasicEntity : MonoBehaviour
         if (Health < 0) OnDeath();
     }
 
-    protected virtual void Take_Heal(float Heal_)
+    public virtual void Take_Heal(float Heal_)
     {
         Health += Heal_;
         if (Health> Health_Max) Health = Health_Max;
     }
 
-    protected virtual void OnDeath()
+    public virtual void OnDeath()
     {
         Object.Destroy(this.gameObject);
     }
