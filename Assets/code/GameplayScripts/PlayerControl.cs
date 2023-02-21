@@ -30,9 +30,15 @@ public class PlayerControl : MonoBehaviour
         return Physics.Raycast(ray, tolerance);
     }
 
+    IEnumerator PunchAttack()
+    {
+        Anim.SetBool("Attack", true);
+        yield return new WaitForSeconds(1.90f);
+        Anim.SetBool("Attack", false); 
+    }
+
     IEnumerator WaitBeforeJump()
     {
-        Debug.Log("e function started"); 
         Anim.SetBool("HasJumped", true); 
         yield return new WaitForSeconds(0.48f);
         playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
@@ -45,6 +51,11 @@ public class PlayerControl : MonoBehaviour
         if (CheckGrounded() && playerVelocity.y < 0)
         {
             playerVelocity.y = 0f;
+        }
+
+        if(Input.GetKeyDown(KeyCode.E))
+        {
+            StartCoroutine(PunchAttack()); 
         }
 
         Vector3 move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));

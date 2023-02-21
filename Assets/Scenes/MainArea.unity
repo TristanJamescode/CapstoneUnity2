@@ -1720,6 +1720,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy_Spitter
       objectReference: {fileID: 0}
+    - target: {fileID: 7092862734954859697, guid: df7b0493168170745a90d12ffbea4f14, type: 3}
+      propertyPath: m_TagString
+      value: Enemy
+      objectReference: {fileID: 0}
     - target: {fileID: 7092862734954859701, guid: df7b0493168170745a90d12ffbea4f14, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -1767,6 +1771,64 @@ PrefabInstance:
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: df7b0493168170745a90d12ffbea4f14, type: 3}
+--- !u!1 &937788222
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 937788223}
+  - component: {fileID: 937788224}
+  - component: {fileID: 937788225}
+  m_Layer: 3
+  m_Name: DamageTrigger
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &937788223
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 937788222}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 1.012, z: 0.419}
+  m_LocalScale: {x: 0.48734, y: 1.7252336, z: 1.3294486}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 852974376}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!65 &937788224
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 937788222}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &937788225
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 937788222}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8fac0d73a8470424da52fd356e3b2ba4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &997408896
 GameObject:
   m_ObjectHideFlags: 0
@@ -4030,8 +4092,16 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2092806396, guid: e95455346f40059438c133a4d2ab4573, type: 3}
+      propertyPath: m_Height
+      value: 1.82
+      objectReference: {fileID: 0}
+    - target: {fileID: 2092806396, guid: e95455346f40059438c133a4d2ab4573, type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2092806396, guid: e95455346f40059438c133a4d2ab4573, type: 3}
+      propertyPath: m_Center.y
+      value: 0.88
       objectReference: {fileID: 0}
     - target: {fileID: 2092806396, guid: e95455346f40059438c133a4d2ab4573, type: 3}
       propertyPath: m_IsTrigger
@@ -4042,8 +4112,16 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1109467680}
     - target: {fileID: 2092806400, guid: e95455346f40059438c133a4d2ab4573, type: 3}
+      propertyPath: m_Height
+      value: 1.82
+      objectReference: {fileID: 0}
+    - target: {fileID: 2092806400, guid: e95455346f40059438c133a4d2ab4573, type: 3}
       propertyPath: m_Enabled
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2092806400, guid: e95455346f40059438c133a4d2ab4573, type: 3}
+      propertyPath: m_Center.y
+      value: 0.88
       objectReference: {fileID: 0}
     - target: {fileID: 97569162929493359, guid: e95455346f40059438c133a4d2ab4573, type: 3}
       propertyPath: m_Layer
@@ -4378,6 +4456,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 7965759694781659845, guid: e95455346f40059438c133a4d2ab4573, type: 3}
       insertIndex: -1
       addedObject: {fileID: 8823192140409049822}
+    - targetCorrespondingSourceObject: {fileID: 7965759694781659845, guid: e95455346f40059438c133a4d2ab4573, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 937788223}
   m_SourcePrefab: {fileID: 100100000, guid: e95455346f40059438c133a4d2ab4573, type: 3}
 --- !u!1001 &8823192140409049821
 PrefabInstance:
