@@ -1541,6 +1541,7 @@ MonoBehaviour:
   playerSpeed: 5
   jumpHeight: 1
   gravityValue: -9.81
+  cameraTransform: {fileID: 1422972940}
 --- !u!4 &852974376 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7965759694781659845, guid: e95455346f40059438c133a4d2ab4573, type: 3}
@@ -2756,6 +2757,11 @@ PrefabInstance:
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: f69a69bbf62690b42b17d846542c4770, type: 3}
+--- !u!4 &1422972940 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 8871108957475146542, guid: 5c281eb348e12dc4c929de453fad8aa8, type: 3}
+  m_PrefabInstance: {fileID: 1886308637}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1476345869
 GameObject:
   m_ObjectHideFlags: 0

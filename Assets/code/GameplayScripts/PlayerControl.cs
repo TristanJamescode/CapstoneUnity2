@@ -14,8 +14,8 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] private float playerSpeed = 2.0f;
     [SerializeField] private float jumpHeight = 1.0f;
     [SerializeField] private float gravityValue = -9.81f;
-    private Animator Anim; 
-
+    private Animator Anim;
+    [SerializeField] private Transform cameraTransform;
     private void Start()
     {
         controller = this.gameObject.GetComponent<CharacterController>();
@@ -59,6 +59,10 @@ public class PlayerControl : MonoBehaviour
         }
 
         Vector3 move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+        Quaternion cameraRotation = cameraTransform.transform.rotation;
+        cameraRotation.x = 0;
+        cameraRotation.z = 0;
+        move = cameraRotation * move;
         controller.Move(move * Time.deltaTime * playerSpeed);
 
         if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
