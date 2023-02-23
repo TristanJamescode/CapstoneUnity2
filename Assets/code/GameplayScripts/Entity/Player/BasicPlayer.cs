@@ -21,6 +21,13 @@ public class BasicPlayer : BasicEntity
         base.Take_Heal(Heal_);
         UpdateHealthBar();
     }
+
+    //public override void Take_Mana(float Mana_)
+    //{
+    //    base.Take_Mana(Mana_);
+    //    UpdateManaBar();
+    //}
+
     public override void Take_Damage(float Damage_)
     {
         base.Take_Damage(Damage_);
@@ -35,4 +42,15 @@ public class BasicPlayer : BasicEntity
         }
         HealthBar.GetComponent<Image>().fillAmount = fillAmount;
     }
+
+    //public virtual void UpdateManaBar()
+    //{
+    //    float fillAmount = Mana / Mana_Max;
+    //    if (fillAmount > 1)
+    //    {
+    //        fillAmount = 1;
+    //    }
+    //    ManaBar.GetComponent<Image>().fillAmount = fillAmount;
+    //}
+
 }

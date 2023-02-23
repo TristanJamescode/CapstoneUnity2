@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//Sources:
+//https://www.youtube.com/watch?v=Pt-L8cBO4GQ&t=903s
+//https://www.youtube.com/watch?v=Ca4J-_zIBuE
+
 public class PlayerHealth : MonoBehaviour
 {
 
