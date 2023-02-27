@@ -2052,6 +2052,8 @@ GameObject:
   - component: {fileID: 861009440}
   - component: {fileID: 861009444}
   - component: {fileID: 861009445}
+  - component: {fileID: 861009446}
+  - component: {fileID: 861009447}
   m_Layer: 0
   m_Name: Hurtmebaby
   m_TagString: Untagged
@@ -2163,6 +2165,35 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Manawaste: 80
+--- !u!114 &861009446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 861009439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b07e07230c69cdc4faf301973a02092f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cubeSize: 0
+  cubesInRow: 0
+  explosionForce: 0
+  explosionRadius: 0
+  explosionUpward: 0
+--- !u!114 &861009447
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 861009439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07c64521b2e1c44fac0114c9b75be93, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &895796811
 GameObject:
   m_ObjectHideFlags: 0
@@ -3559,6 +3590,8 @@ GameObject:
   - component: {fileID: 1541888410}
   - component: {fileID: 1541888409}
   - component: {fileID: 1541888414}
+  - component: {fileID: 1541888415}
+  - component: {fileID: 1541888416}
   m_Layer: 0
   m_Name: Healmebaby
   m_TagString: Untagged
@@ -3670,6 +3703,35 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Manawaste: -80
+--- !u!114 &1541888415
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1541888408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b07e07230c69cdc4faf301973a02092f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cubeSize: 0
+  cubesInRow: 0
+  explosionForce: 0
+  explosionRadius: 0
+  explosionUpward: 0
+--- !u!114 &1541888416
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1541888408}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e07c64521b2e1c44fac0114c9b75be93, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1574720618
 GameObject:
   m_ObjectHideFlags: 0
