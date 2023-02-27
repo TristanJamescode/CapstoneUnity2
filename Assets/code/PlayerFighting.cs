@@ -4,12 +4,20 @@ using UnityEngine;
 
 public class PlayerFighting : MonoBehaviour
 {
+    private GameObject player;
 
-    private void OnTriggerEnter(Collider other)
+    private void Start()
     {
-        if(Input.GetKeyDown(KeyCode.E))
-        {
-            Destroy(other.gameObject); 
-        }
+        player = GameObject.FindGameObjectWithTag("Player"); 
     }
+
+    //private void OnTriggerEnter(Collider other)
+    //{
+    //    Debug.Log("Gameobject tag is: " + other.gameObject.tag); 
+    //    if(other.gameObject.tag == "Enemy")
+    //    {
+    //        Debug.Log("Enemy detected"); 
+    //        Destroy(other.gameObject);
+    //    }    
+    //}
 }
