@@ -5,6 +5,8 @@ using UnityEngine.UI;
 public class BasicPlayer : BasicEntity
 {
     public GameObject HealthBar;
+    [SerializeField] AudioSource DeathSound;
+    [SerializeField] Animator myAnim; 
     protected enum ANIMSTATE
     {
         IDLE,
@@ -14,7 +16,9 @@ public class BasicPlayer : BasicEntity
     }
     public override void OnDeath()
     {
-        
+        DeathSound.Play(); 
+        Debug.Log("Player Is Dead");
+        myAnim.SetBool("IsDead", true); 
     }
     public override void Take_Heal(float Heal_)
     {

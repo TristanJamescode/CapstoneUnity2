@@ -16,9 +16,17 @@ public class PlayerHealth : MonoBehaviour
 
     public float maxHealth = 100;
 
+    [SerializeField] AudioSource AudioS; 
+
     private void Start()
     {
         health = maxHealth;        
+    }
+
+    private void Death()
+    {
+        AudioS.Play();
+        Debug.Log("Player Is Dead"); 
     }
 
     public void AddHealth(float amount)
@@ -32,9 +40,10 @@ public class PlayerHealth : MonoBehaviour
     {
         health -= amount;
         Debug.Log("Health Decreased, Current Health: " + health);
-        if(health <= 0) { 
-        health = 0;
-            Debug.Log("Player is dead");
+        if(health <= 0) 
+        { 
+            health = 0;
+            Death(); 
         }
         UpdateHealthBar();
     }
