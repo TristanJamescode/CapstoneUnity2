@@ -14,12 +14,16 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] private float playerSpeed = 2.0f;
     [SerializeField] private float jumpHeight = 1.0f;
     [SerializeField] private float gravityValue = -9.81f;
+    [SerializeField] GameObject AttackBox;
+    private BoxCollider AttackCollider; 
     private Animator Anim;
+    public bool IsAttacking = false; 
     [SerializeField] private Transform cameraTransform;
     private void Start()
     {
         controller = this.gameObject.GetComponent<CharacterController>();
-        Anim = this.gameObject.GetComponent<Animator>(); 
+        Anim = this.gameObject.GetComponent<Animator>();
+        AttackCollider = AttackBox.GetComponent<BoxCollider>(); 
     }
 
     private bool CheckGrounded() //Check is on ground with ray, this prevent player can not jump while on tilt ground
@@ -30,11 +34,19 @@ public class PlayerControl : MonoBehaviour
         return Physics.Raycast(ray, tolerance);
     }
 
-    IEnumerator PunchAttack()
+    IEnumerator PunchAttack(Collider AttackCollider)
     {
         Anim.SetBool("Attack", true);
+        IsAttacking = true;
+        Collider[] cols = Physics.OverlapBox(AttackCollider.bounds.center, AttackCollider.bounds.extents,
+            transform.rotation, LayerMask.GetMask("Enemy")); 
+        foreach(Collider c in cols)
+        {
+            Debug.Log(c.gameObject.name); 
+        }
         yield return new WaitForSeconds(1.90f);
-        Anim.SetBool("Attack", false); 
+        Anim.SetBool("Attack", false);
+        IsAttacking = false; 
     }
 
     IEnumerator WaitBeforeJump()
@@ -55,7 +67,12 @@ public class PlayerControl : MonoBehaviour
 
         if(Input.GetKeyDown(KeyCode.E))
         {
-            StartCoroutine(PunchAttack()); 
+            StartCoroutine(PunchAttack(AttackCollider)); 
+        }
+
+        if(IsAttacking)
+        {
+            //AttackCollider
         }
 
         Vector3 move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
