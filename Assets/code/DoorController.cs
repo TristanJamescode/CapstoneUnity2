@@ -9,12 +9,13 @@ public class DoorController : MonoBehaviour
 {
     public GameObject Door;
     public bool doorIsOpening;
-
-    // Update is called once per frame
+    //public Vector3 PostoMove;
+    //public float SectoMove;
     void Update()
     {
-        if(doorIsOpening == true) { 
-        Door.transform.Translate (Vector3.up * Time.deltaTime * 5);
+        if (doorIsOpening == true)
+        {
+            Door.transform.Translate(Vector3.up * Time.deltaTime * 5);
         }
         if (Door.transform.position.y > 257)
         {
@@ -26,19 +27,15 @@ public class DoorController : MonoBehaviour
             doorIsOpening = false;
         }
     }
-
     private void OnMouseDown()
     {
-        doorIsOpening= true;
+        doorIsOpening = true;
     }
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("Player"))
       {
-            doorIsOpening= true;
+            doorIsOpening = true;
        }
-
     }
-
 }

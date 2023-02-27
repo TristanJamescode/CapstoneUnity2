@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 /// <summary>
@@ -16,19 +14,19 @@ public class BasicEnemy : BasicEntity
     public float walkPointRange;
     //Attack
     protected float timeToAttack = 0.0f;
-    public float timeBetweenAttacks=3.0f;
+    public float timeBetweenAttacks = 3.0f;
     protected bool attack_ready;
     protected bool attack_finished;
     //States
-    public float attackRange,sightRange,lostRange;
+    public float attackRange, sightRange, lostRange;
     protected float TimetoLost = 0.0f;
-    public float TimetoLostEntity=3.0f;
+    public float TimetoLostEntity = 3.0f;
     protected StateMachine stateMachine;
     public string Statename;
     protected class IdleState : BaseState
     {
         BasicEnemy enemy;
-        public IdleState(BasicEnemy enemy,string name, StateMachine stateMachine) : base(name, stateMachine)
+        public IdleState(BasicEnemy enemy, string name, StateMachine stateMachine) : base(name, stateMachine)
         {
             this.enemy = enemy;
         }
@@ -39,7 +37,7 @@ public class BasicEnemy : BasicEntity
     }
     protected class PatrolState : BaseState
     {
-        int giveupcount=0;
+        int giveupcount = 0;
         BasicEnemy enemy;
         public PatrolState(BasicEnemy enemy, string name, StateMachine stateMachine) : base(name, stateMachine)
         {
@@ -48,7 +46,8 @@ public class BasicEnemy : BasicEntity
         public override void OnEnter()
         {
             enemy.walkPointSet = false;
-            for (int i= 0; i < giveupcount; i++){
+            for (int i = 0; i < giveupcount; i++)
+            {
                 if (enemy.SearchRandomWalkPoint())
                 {
                     enemy.walkPointSet = true;
@@ -58,7 +57,7 @@ public class BasicEnemy : BasicEntity
         }
         public override void Update()
         {
-            if(enemy.walkPointSet)enemy.agent.SetDestination(enemy.walkPoint);
+            if (enemy.walkPointSet) enemy.agent.SetDestination(enemy.walkPoint);
         }
     }
     protected class ChasingState : BaseState
@@ -106,7 +105,7 @@ public class BasicEnemy : BasicEntity
     }
     protected class C_IsPlayerInRange : TransactionCondition
     {
-        protected float Range=0;
+        protected float Range = 0;
         protected BasicEnemy enemy;
         public C_IsPlayerInRange(BasicEnemy enemy, float Range)
         {
@@ -115,7 +114,7 @@ public class BasicEnemy : BasicEntity
         }
         public override bool TriggerCheck()
         {
-            bool returnbool= Physics.CheckSphere(enemy.transform.position, Range, enemy.whatIsPlayer);
+            bool returnbool = Physics.CheckSphere(enemy.transform.position, Range, enemy.whatIsPlayer);
             //if (returnbool) Debug.Log(Range);
             return returnbool;
         }
@@ -132,7 +131,7 @@ public class BasicEnemy : BasicEntity
             return (enemy.attack_finished);
         }
     }
-    protected class C_IsTimetoLost: TransactionCondition
+    protected class C_IsTimetoLost : TransactionCondition
     {
         BasicEnemy enemy;
         public C_IsTimetoLost(BasicEnemy enemy)
@@ -144,7 +143,7 @@ public class BasicEnemy : BasicEntity
             return (enemy.TimetoLost < 0);
         }
     }
-    protected class C_IsReachedtoWalkPoint: TransactionCondition
+    protected class C_IsReachedtoWalkPoint : TransactionCondition
     {
         BasicEnemy enemy;
         public C_IsReachedtoWalkPoint(BasicEnemy enemy)
@@ -153,7 +152,7 @@ public class BasicEnemy : BasicEntity
         }
         public override bool TriggerCheck()
         {
-            bool returnbool=false;
+            bool returnbool = false;
             if ((enemy.transform.position - enemy.walkPoint).magnitude < 1f) //PATROL TO IDLE 
             {
                 enemy.walkPointSet = false;//Walkpoint reached
@@ -164,13 +163,13 @@ public class BasicEnemy : BasicEntity
     }
     protected virtual void Awake()
     {
-        if (Player == null && GameObject.FindGameObjectWithTag("Player")!=null) { Player = GameObject.FindGameObjectWithTag("Player").transform; } //Find Player if exists
+        if (Player == null && GameObject.FindGameObjectWithTag("Player") != null) { Player = GameObject.FindGameObjectWithTag("Player").transform; } //Find Player if exists
         stateMachine = gameObject.AddComponent<StateMachine>();
 
-        BaseState Idle = new IdleState(this,"Idle", stateMachine);
-        BaseState Patrol = new PatrolState(this,"Patrol", stateMachine);
-        BaseState Chasing = new ChasingState(this,"Chasing", stateMachine);
-        BaseState Attacking = new AttackingState(this,"Attacking", stateMachine);
+        BaseState Idle = new IdleState(this, "Idle", stateMachine);
+        BaseState Patrol = new PatrolState(this, "Patrol", stateMachine);
+        BaseState Chasing = new ChasingState(this, "Chasing", stateMachine);
+        BaseState Attacking = new AttackingState(this, "Attacking", stateMachine);
 
         Transaction idletopatrol = new(Patrol);
         Transaction idletochasing = new(Chasing);
@@ -183,7 +182,7 @@ public class BasicEnemy : BasicEntity
         Transaction attackingtoidle = new(Idle);
 
         TransactionCondition c_IsPlayerInAttackRange = new C_IsPlayerInRange(this, attackRange);
-        TransactionCondition c_IsPlayerInAttackOutRange = new C_IsPlayerInRange(this, attackRange*1.1f);
+        TransactionCondition c_IsPlayerInAttackOutRange = new C_IsPlayerInRange(this, attackRange * 1.1f);
         TransactionCondition c_IsPlayerInSightRange = new C_IsPlayerInRange(this, sightRange);
         TransactionCondition c_IsPlayerInLostRange = new C_IsPlayerInRange(this, lostRange);
         //TransactionCondition c_IsAttackFinished = new C_IsAttackFinished(this);
@@ -223,7 +222,7 @@ public class BasicEnemy : BasicEntity
     {
         float randomZ = Random.Range(-walkPointRange, walkPointRange);
         float randomX = Random.Range(-walkPointRange, walkPointRange);
-        walkPoint = new Vector3(transform.position.x + randomX, transform.position.y, transform.position.z+randomZ);
+        walkPoint = new Vector3(transform.position.x + randomX, transform.position.y, transform.position.z + randomZ);
         if (Physics.Raycast(walkPoint, -transform.up, 2f, whatIsGround))
         {
             return true;
@@ -232,11 +231,11 @@ public class BasicEnemy : BasicEntity
     }
     protected virtual bool AttackPlayer()
     {
-        return false;     
+        return false;
     }
     protected virtual bool IsPlayerBetweenSightandLost()
     {
-        return (Physics.CheckSphere(transform.position, sightRange, whatIsPlayer) 
+        return (Physics.CheckSphere(transform.position, sightRange, whatIsPlayer)
             && !Physics.CheckSphere(transform.position, lostRange, whatIsPlayer));
 
     }

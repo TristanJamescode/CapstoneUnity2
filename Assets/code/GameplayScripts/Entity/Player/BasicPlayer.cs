@@ -4,15 +4,18 @@ using UnityEngine;
 using UnityEngine.UI;
 public class BasicPlayer : BasicEntity
 {
-    public GameObject HealthBar;
+    public float Mana = 100; // Mana
+    public float Mana_max = 100; // Mana Max
+    protected float Mana_Regen_Amount = 1;
+    protected float Mana_Regen_Delay = 10;
+    [SerializeField] GameObject HealthBar;
+    [SerializeField] GameObject ManaBar;
     [SerializeField] AudioSource DeathSound;
-    [SerializeField] Animator myAnim; 
-    protected enum ANIMSTATE
+    [SerializeField] Animator myAnim;
+    protected override void Update()
     {
-        IDLE,
-        WALK,
-        JUMP,
-        ATTACK,
+        base.Update();
+        Mana_Regen();
     }
     public override void OnDeath()
     {
@@ -25,17 +28,45 @@ public class BasicPlayer : BasicEntity
         base.Take_Heal(Heal_);
         UpdateHealthBar();
     }
-
-    //public override void Take_Mana(float Mana_)
-    //{
-    //    base.Take_Mana(Mana_);
-    //    UpdateManaBar();
-    //}
-
     public override void Take_Damage(float Damage_)
     {
         base.Take_Damage(Damage_);
         UpdateHealthBar();
+    }
+    public virtual void Mana_Gain(float Mana_)
+    {
+        Mana += Mana_;
+        if (Mana > Mana_max) Mana = Mana_max;
+        UpdateManaBar();
+    }
+    public virtual bool Mana_Use(float ManaUse_)
+    {
+        if (!Mana_Check(ManaUse_))
+        {
+            return false;
+        }
+        else
+        {
+            Mana -= ManaUse_;
+            UpdateManaBar();
+            return true;
+        }
+    }
+    public virtual bool Mana_Check(float ManaUse_)
+    {
+        if (Mana < ManaUse_) return false;
+        return true;
+    }
+    public virtual void Mana_Regen()
+    {
+        if (Mana_Regen_Delay > 0)
+        {
+            Mana_Regen_Delay -= Time.deltaTime;
+        }
+        else
+        {
+            Mana_Gain(Mana_Regen_Amount);
+        }
     }
     public virtual void UpdateHealthBar()
     {
@@ -46,15 +77,13 @@ public class BasicPlayer : BasicEntity
         }
         HealthBar.GetComponent<Image>().fillAmount = fillAmount;
     }
-
-    //public virtual void UpdateManaBar()
-    //{
-    //    float fillAmount = Mana / Mana_Max;
-    //    if (fillAmount > 1)
-    //    {
-    //        fillAmount = 1;
-    //    }
-    //    ManaBar.GetComponent<Image>().fillAmount = fillAmount;
-    //}
-
+    public virtual void UpdateManaBar()
+    {
+        float fillAmount = Mana / Mana_max;
+        if (fillAmount > 1)
+        {
+            fillAmount = 1;
+        }
+        ManaBar.GetComponent<Image>().fillAmount = fillAmount;
+    }
 }

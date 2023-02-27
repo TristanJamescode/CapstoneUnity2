@@ -40,7 +40,6 @@ public class BasicProjectile : BasicEntity
     }
     protected virtual void OnTriggerEnter(Collider other)
     {
-        collisions++;
         if (other.CompareTag("Player"))
         {
             other.GetComponent<BasicEntity>().Take_Damage(Projectile_Damage);
@@ -49,12 +48,14 @@ public class BasicProjectile : BasicEntity
     }
     private protected void Setup()
     {
+        /*
         physics_mat = new PhysicMaterial();
         physics_mat.bounciness = bounciness;
         physics_mat.frictionCombine = PhysicMaterialCombine.Minimum;
         physics_mat.bounceCombine = PhysicMaterialCombine.Maximum;
 
         GetComponent<SphereCollider>().material = physics_mat;
+        */
         GetComponent<Rigidbody>().useGravity = useGravity;
     }
 }

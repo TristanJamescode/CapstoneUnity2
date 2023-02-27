@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-
 public class Enemy_Contactor : BasicEnemy
 {
     public float PokeDistance = 0.7f;

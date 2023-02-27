@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -29,7 +28,6 @@ public class Projectile_Poke : BasicProjectile
             default:
                 break;
         }
-        //if (collisions < collisions_max) OnDeath();
         maxLifetime -= Time.deltaTime;
         if (maxLifetime < 0) OnDeath();
     }
