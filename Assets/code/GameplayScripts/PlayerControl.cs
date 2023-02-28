@@ -58,6 +58,12 @@ public class PlayerControl : MonoBehaviour
         Anim.SetBool("HasJumped", false); 
     }
 
+    private void Run(Vector3 move)
+    {
+        controller.Move(move * Time.deltaTime * (playerSpeed * 3));
+        Anim.SetBool("IsRunning", true); 
+    }
+
     void Update()
     {
         if (CheckGrounded() && playerVelocity.y < 0)
@@ -80,7 +86,19 @@ public class PlayerControl : MonoBehaviour
         cameraRotation.x = 0;
         cameraRotation.z = 0;
         move = cameraRotation * move;
-        controller.Move(move * Time.deltaTime * playerSpeed);
+        if(!Input.GetKey(KeyCode.R))
+        {
+            controller.Move(move * Time.deltaTime * playerSpeed);
+            if(Anim.GetBool("IsRunning") == true)
+            {
+                Anim.SetBool("IsRunning", false); 
+            }
+        }
+        else if (Input.GetKey(KeyCode.R))
+        {
+            Run(move); 
+        }
+        
 
         if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
         {
