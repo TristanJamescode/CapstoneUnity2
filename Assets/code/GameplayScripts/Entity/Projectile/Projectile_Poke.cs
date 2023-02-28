@@ -11,6 +11,11 @@ public class Projectile_Poke : BasicProjectile
     public Transform TransformUser;
     protected override void Update()
     {
+        if (TransformUser == null)
+        {
+            OnDeath();
+            return;
+        }
         transform.position = TransformUser.position+transform.rotation*Vector3.forward*PokeDistances;
         switch (PokeState)
         {

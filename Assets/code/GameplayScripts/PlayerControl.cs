@@ -15,6 +15,7 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] private float jumpHeight = 1.0f;
     [SerializeField] private float gravityValue = -9.81f;
     [SerializeField] GameObject AttackBox;
+    [SerializeField] private LayerMask Layer_enemy;
     private BoxCollider AttackCollider; 
     private Animator Anim;
     public bool IsAttacking = false; 
@@ -39,10 +40,11 @@ public class PlayerControl : MonoBehaviour
         Anim.SetBool("Attack", true);
         IsAttacking = true;
         Collider[] cols = Physics.OverlapBox(AttackCollider.bounds.center, AttackCollider.bounds.extents,
-            transform.rotation, LayerMask.GetMask("Enemy")); 
+           AttackCollider.transform.rotation, Layer_enemy); 
         foreach(Collider c in cols)
         {
-            Debug.Log(c.gameObject.name); 
+            Debug.Log(c.gameObject.name);
+            c.GetComponentInParent<BasicEnemy>().Take_Damage(50);
         }
         yield return new WaitForSeconds(1.90f);
         Anim.SetBool("Attack", false);
