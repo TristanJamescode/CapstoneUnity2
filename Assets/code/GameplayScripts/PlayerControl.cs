@@ -45,6 +45,7 @@ public class PlayerControl : MonoBehaviour
         {
             Debug.Log(c.gameObject.name);
             c.GetComponentInParent<BasicEnemy>().Take_Damage(50);
+            c.GetComponentInParent<BasicEnemy>().Take_Knockback(2, c.gameObject.transform.position-this.transform.position);
         }
         yield return new WaitForSeconds(1.90f);
         Anim.SetBool("Attack", false);

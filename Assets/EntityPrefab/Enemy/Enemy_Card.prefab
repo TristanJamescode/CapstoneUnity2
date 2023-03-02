@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3900882182650329382}
   - component: {fileID: 9189803808011310059}
   - component: {fileID: 6458669411461625331}
+  - component: {fileID: -9040429755313369724}
   m_Layer: 6
   m_Name: Enemy_Card
   m_TagString: Enemy
@@ -120,3 +121,35 @@ NavMeshAgent:
   m_BaseOffset: 0.5
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &-9040429755313369724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7183102166002737351}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b7a028800aad4a428b4c1f889381b26, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Health: 100
+  Health_Max: 100
+  Invincible_Time: 0
+  body: {fileID: 0}
+  agent: {fileID: 6458669411461625331}
+  Player: {fileID: 0}
+  whatIsGround:
+    serializedVersion: 2
+    m_Bits: 0
+  whatIsPlayer:
+    serializedVersion: 2
+    m_Bits: 0
+  walkPoint: {x: 0, y: 0, z: 0}
+  walkPointRange: 0
+  timeBetweenAttacks: 3
+  attackRange: 0
+  sightRange: 0
+  lostRange: 0
+  TimetoLostEntity: 3
+  Statename: 

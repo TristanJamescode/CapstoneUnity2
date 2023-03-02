@@ -4,8 +4,11 @@ using UnityEngine;
 using UnityEngine.UI;
 public class BasicPlayer : BasicEntity
 {
+    private CharacterController controller;
     public float Mana = 100; // Mana
     public float Mana_max = 100; // Mana Max
+    //public float Stamina = 100;
+    //public float Stamina_max = 100;
     protected float Mana_Regen_Amount = 1;
     protected float Mana_Regen_Delay = 10;
     [SerializeField] GameObject HealthBar;
@@ -16,6 +19,23 @@ public class BasicPlayer : BasicEntity
     {
         base.Update();
         Mana_Regen();
+        if (Knockback_Velocity != Vector3.zero)
+        {
+            Knockback_Velocity *= 0.9f;
+            controller = GetComponent<CharacterController>();
+            controller.Move(Knockback_Velocity * Time.deltaTime);
+            if (Knockback_Velocity.magnitude < 0.5f) Knockback_Velocity = Vector3.zero;
+        }
+    }
+    public override void Update_KnockbackRelated()
+    {
+        if (Knockback_Velocity != Vector3.zero)
+        {
+            Knockback_Velocity *= 0.9f;
+            controller = GetComponent<CharacterController>();
+            controller.Move(Knockback_Velocity * Time.deltaTime);
+            if (Knockback_Velocity.magnitude < 0.5f) Knockback_Velocity = Vector3.zero;
+        }
     }
     public override void OnDeath()
     {
@@ -32,6 +52,12 @@ public class BasicPlayer : BasicEntity
     {
         base.Take_Damage(Damage_);
         UpdateHealthBar();
+    }
+    public override void Take_Knockback(float Amount, Vector3 Direction)
+    {
+        Vector3 KnockbackVector = Direction.normalized * Amount;
+        Knockback_Velocity += KnockbackVector;
+        Debug.Log("PlayerGetKnockback" + Amount + " " + Direction);
     }
     public virtual void Mana_Gain(float Mana_)
     {
@@ -86,4 +112,5 @@ public class BasicPlayer : BasicEntity
         }
         ManaBar.GetComponent<Image>().fillAmount = fillAmount;
     }
+    //public virtual void UpdateStaminaBar(){}
 }

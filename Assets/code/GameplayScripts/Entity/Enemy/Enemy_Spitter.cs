@@ -1,8 +1,7 @@
 using UnityEngine;
 public class Enemy_Spitter : BasicEnemy
-{    //Projectile
-    //Projectile
-    public GameObject bullet;
+{  
+    public BasicProjectile bullet;
     public float shootForce;
     [SerializeField]
     GameObject shootingPoint;
@@ -22,7 +21,8 @@ public class Enemy_Spitter : BasicEnemy
         {
             timeToAttack = timeBetweenAttacks;
             Vector3 direction = transform.rotation * Vector3.forward;
-            GameObject currentBullet = Instantiate(bullet, shootingPoint.transform.position, Quaternion.identity);
+            BasicProjectile currentBullet = Instantiate(bullet, shootingPoint.transform.position, Quaternion.identity);
+            currentBullet.SetProjectileStatus(this.gameObject, 10);
             currentBullet.transform.rotation = transform.rotation;
             currentBullet.GetComponent<Rigidbody>().AddForce(direction * shootForce, ForceMode.Impulse);
             attack_ready = false;

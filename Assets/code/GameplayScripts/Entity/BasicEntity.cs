@@ -10,9 +10,14 @@ public class BasicEntity : MonoBehaviour
     public float Health_Max = 100; // Health Max
     public float Invincible_Time = 0;
     protected bool Invincible = false;
+    //knockback value
+    protected Vector3 Knockback_Velocity;
+    protected float Knockback_Counter = 0;
     protected virtual void Update()
     {
         Update_InvincibilityFrame();
+        Update_KnockbackRelated();
+        if (Knockback_Counter > 0) Knockback_Counter -= Time.deltaTime;
     }
     protected virtual void Update_InvincibilityFrame()
     {
@@ -24,6 +29,8 @@ public class BasicEntity : MonoBehaviour
         }
         Invincible = IsInvicible;
     }
+    public virtual void Update_KnockbackRelated()
+    {}
     public virtual void Take_Damage(float Damage_)
     {
         if (Invincible) return;
@@ -34,6 +41,9 @@ public class BasicEntity : MonoBehaviour
     {
         Health += Heal_;
         if (Health> Health_Max) Health = Health_Max;
+    }
+    public virtual void Take_Knockback(float Amount, Vector3 Direction) 
+    {
     }
     public virtual void OnDeath()
     {

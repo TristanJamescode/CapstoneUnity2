@@ -16,14 +16,8 @@ public class BasicProjectile : BasicEntity
     public int collisions=0;
     public float maxLifetime = 10;
     //Targetsettings
-    public ProjectileFrom projectilefrom = ProjectileFrom.Player;
+    public GameObject ShootingFrom;
     public float Projectile_Damage = 10;
-    public enum ProjectileFrom
-    {
-        Player,
-        Enemy,
-        Other
-    }
     private void Start()
     {
         Setup();
@@ -38,11 +32,19 @@ public class BasicProjectile : BasicEntity
     {
         base.OnDeath();
     }
+    public virtual void SetProjectileStatus(GameObject ShootingFrom,float Projectile_Damage = 1)
+    {
+        this.ShootingFrom = ShootingFrom;
+        this.Projectile_Damage = Projectile_Damage;
+    }
     protected virtual void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player"))
+        if (ShootingFrom == null) return;
+        if (other.tag != ShootingFrom.tag && other.tag != "Untagged")
         {
             other.GetComponent<BasicEntity>().Take_Damage(Projectile_Damage);
+            Vector3 KnockbackDirection = other.transform.position - transform.position;
+            other.GetComponent<BasicEntity>().Take_Knockback(5, KnockbackDirection);
             OnDeath();
         }
     }

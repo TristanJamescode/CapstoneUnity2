@@ -21,12 +21,12 @@ public class Enemy_Contactor : BasicEnemy
             timeToAttack = timeBetweenAttacks;
             Vector3 direction = transform.rotation * Vector3.forward;
             Projectile_Poke currentBullet = Instantiate(Projectile, transform.position, Quaternion.identity);
+            currentBullet.SetProjectileStatus(this.gameObject, 1);
             currentBullet.transform.rotation = transform.rotation;
             currentBullet.PokeDistance = PokeDistance;
             currentBullet.maxLifetime = 10f;
             currentBullet.TransformUser = this.transform;
             currentBullet.PokeTime = 0.4f;
-            currentBullet.Projectile_Damage = 1.0f;
             attack_finished = true;
             attack_ready = false;
             return true;

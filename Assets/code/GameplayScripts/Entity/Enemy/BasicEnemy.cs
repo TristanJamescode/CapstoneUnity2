@@ -5,6 +5,7 @@ using UnityEngine.AI;
 /// </summary>
 public class BasicEnemy : BasicEntity
 {
+    //[SerializeField] private Rigidbody body;
     public NavMeshAgent agent;
     public Transform Player;
     public LayerMask whatIsGround, whatIsPlayer;
@@ -217,6 +218,24 @@ public class BasicEnemy : BasicEntity
         base.Update();
         stateMachine.Update();
         Statename = stateMachine.currentState.name;
+    }
+    public override void Take_Knockback(float Amount, Vector3 Direction)
+    {
+        base.Take_Knockback(Amount, Direction);
+        Knockback_Counter = 2;
+        Direction.Normalize();
+        Vector3 KnockbackVector = Direction * Amount;
+        Knockback_Velocity = KnockbackVector;
+        //if (body != null) body.AddForce(Direction * Amount, ForceMode.VelocityChange);
+    }
+    public override void Update_KnockbackRelated()
+    {
+        if (Knockback_Velocity != Vector3.zero)
+        {
+            Knockback_Velocity *= 0.9f;
+            agent.Move(Knockback_Velocity * Time.deltaTime);
+            if (Knockback_Velocity.magnitude < 0.5f) Knockback_Velocity = Vector3.zero;
+        }
     }
     protected virtual bool SearchRandomWalkPoint()
     {
