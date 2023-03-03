@@ -13,7 +13,7 @@ public class PlayerControl : MonoBehaviour
     private Vector3 playerVelocity;
     [SerializeField] private float playerSpeed = 2.0f;
     [SerializeField] private float jumpHeight = 1.0f;
-    private float gravityValue = -9.81f;
+    private float gravityValue = -9.80f;
     [SerializeField] GameObject AttackBox;
     [SerializeField] private LayerMask Layer_enemy;
     private BoxCollider AttackCollider; 
