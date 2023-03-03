@@ -13,18 +13,22 @@ public class PlayerControl : MonoBehaviour
     private Vector3 playerVelocity;
     [SerializeField] private float playerSpeed = 2.0f;
     [SerializeField] private float jumpHeight = 1.0f;
-    [SerializeField] private float gravityValue = -9.81f;
+    private float gravityValue = -9.81f;
     [SerializeField] GameObject AttackBox;
     [SerializeField] private LayerMask Layer_enemy;
     private BoxCollider AttackCollider; 
     private Animator Anim;
+    private PlayerMana MyMana;
+    private GameObject ObjInFrontOfPlayer;
+    private bool IsClimbing = false; 
     public bool IsAttacking = false; 
     [SerializeField] private Transform cameraTransform;
     private void Start()
     {
         controller = this.gameObject.GetComponent<CharacterController>();
         Anim = this.gameObject.GetComponent<Animator>();
-        AttackCollider = AttackBox.GetComponent<BoxCollider>(); 
+        AttackCollider = AttackBox.GetComponent<BoxCollider>();
+        MyMana = this.gameObject.GetComponent<PlayerMana>(); 
     }
 
     private bool CheckGrounded() //Check is on ground with ray, this prevent player can not jump while on tilt ground
@@ -33,6 +37,28 @@ public class PlayerControl : MonoBehaviour
         var ray = new Ray(this.transform.position + Vector3.up * 0.1f, Vector3.down);
         var tolerance = 0.3f;
         return Physics.Raycast(ray, tolerance);
+    }
+
+    private bool CheckClimableWall()
+    {
+        RaycastHit hit; 
+
+        if(Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 1.0f))
+        {
+            Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.green);
+            ObjInFrontOfPlayer = hit.transform.gameObject; 
+            if(ObjInFrontOfPlayer.tag == "SteelWall")
+            {
+                Debug.Log("This wall can be climbed");
+                return true;
+            }
+            else
+            {
+                Debug.Log("This wall cannot be clibed");
+                return false; 
+            }
+        }
+        return false; 
     }
 
     IEnumerator PunchAttack(Collider AttackCollider)
@@ -61,14 +87,39 @@ public class PlayerControl : MonoBehaviour
         Anim.SetBool("HasJumped", false); 
     }
 
+    private void Climb()
+    {
+
+    }
+
     private void Run(Vector3 move)
     {
-        controller.Move(move * Time.deltaTime * (playerSpeed * 3));
-        Anim.SetBool("IsRunning", true); 
+        if(MyMana.mana > 0)
+        {
+            controller.Move(move * Time.deltaTime * (playerSpeed * 3));
+            Anim.SetBool("IsRunning", true);
+            MyMana.DecreasedMana(10.0f * Time.deltaTime);
+        }
+        else
+        {
+            Anim.SetBool("IsRunning", false); 
+            Anim.SetBool("IsWalking", true);
+            controller.Move(move * Time.deltaTime * playerSpeed); 
+        }
     }
 
     void Update()
     {
+        if(CheckClimableWall())
+        {
+            if(Input.GetKeyDown(KeyCode.C))
+            {
+                IsClimbing = true;
+                Anim.SetBool("IsClimbing", true); 
+
+            }
+        }
+
         if (CheckGrounded() && playerVelocity.y < 0)
         {
             playerVelocity.y = 0f;
@@ -79,17 +130,12 @@ public class PlayerControl : MonoBehaviour
             StartCoroutine(PunchAttack(AttackCollider)); 
         }
 
-        if(IsAttacking)
-        {
-            //AttackCollider
-        }
-
         Vector3 move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
         Quaternion cameraRotation = cameraTransform.transform.rotation;
         cameraRotation.x = 0;
         cameraRotation.z = 0;
         move = cameraRotation * move;
-        if(!Input.GetKey(KeyCode.R))
+        if(!Input.GetKey(KeyCode.LeftShift))
         {
             controller.Move(move * Time.deltaTime * playerSpeed);
             if(Anim.GetBool("IsRunning") == true)
@@ -97,7 +143,7 @@ public class PlayerControl : MonoBehaviour
                 Anim.SetBool("IsRunning", false); 
             }
         }
-        else if (Input.GetKey(KeyCode.R))
+        else if (Input.GetKey(KeyCode.LeftShift))
         {
             Run(move); 
         }
@@ -124,5 +170,10 @@ public class PlayerControl : MonoBehaviour
         }
         playerVelocity.y += gravityValue * Time.deltaTime;
         controller.Move(playerVelocity * Time.deltaTime);
+    }
+
+    private void FixedUpdate()
+    {
+        
     }
 }

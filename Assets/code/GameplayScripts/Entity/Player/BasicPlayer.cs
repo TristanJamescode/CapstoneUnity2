@@ -7,6 +7,7 @@ public class BasicPlayer : BasicEntity
     private CharacterController controller;
     public float Mana = 100; // Mana
     public float Mana_max = 100; // Mana Max
+    private bool IsAlive = true; 
     //public float Stamina = 100;
     //public float Stamina_max = 100;
     protected float Mana_Regen_Amount = 1;
@@ -18,7 +19,7 @@ public class BasicPlayer : BasicEntity
     protected override void Update()
     {
         base.Update();
-        Mana_Regen();
+        //Mana_Regen();
         if (Knockback_Velocity != Vector3.zero)
         {
             Knockback_Velocity *= 0.9f;
@@ -39,9 +40,13 @@ public class BasicPlayer : BasicEntity
     }
     public override void OnDeath()
     {
-        DeathSound.Play(); 
-        Debug.Log("Player Is Dead");
-        myAnim.SetBool("IsDead", true); 
+        if(IsAlive)
+        {
+            DeathSound.Play();
+            Debug.Log("Player Is Dead");
+            myAnim.SetBool("IsDead", true);
+            IsAlive = false; 
+        }
     }
     public override void Take_Heal(float Heal_)
     {
@@ -57,7 +62,7 @@ public class BasicPlayer : BasicEntity
     {
         Vector3 KnockbackVector = Direction.normalized * Amount;
         Knockback_Velocity += KnockbackVector;
-        Debug.Log("PlayerGetKnockback" + Amount + " " + Direction);
+        //Debug.Log("PlayerGetKnockback" + Amount + " " + Direction);
     }
     public virtual void Mana_Gain(float Mana_)
     {

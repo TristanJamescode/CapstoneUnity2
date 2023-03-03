@@ -7,7 +7,7 @@ public class PlayerMana : MonoBehaviour
 {
     public GameObject ManaBar;
 
-    private float mana;
+    public float mana;
 
     public float maxMana = 100;
 
