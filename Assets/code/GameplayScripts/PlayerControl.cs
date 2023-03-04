@@ -14,6 +14,8 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] private float playerSpeed = 2.0f;
     [SerializeField] private float jumpHeight = 1.0f;
     private float gravityValue = -9.80f;
+    private float noJumpingTimer = 0.0f; //Used to prevent jump inputs in quick succession from allowing players to jump really high.
+    [SerializeField] private float noJumpingTime = 2.2f; //This one is used to let us adjust the timing of the grce period in the editor.
     [SerializeField] GameObject AttackBox;
     [SerializeField] private LayerMask Layer_enemy;
     private BoxCollider AttackCollider; 
@@ -120,7 +122,7 @@ public class PlayerControl : MonoBehaviour
             }
         }
 
-        if (CheckGrounded() && playerVelocity.y < 0)
+        if (CheckGrounded() && playerVelocity.y < 0) //Ensures that the player stops when hitting the ground
         {
             playerVelocity.y = 0f;
         }
@@ -164,12 +166,14 @@ public class PlayerControl : MonoBehaviour
         }
 
         // Changes the height position of the player..
-        if (Input.GetButtonDown("Jump") && CheckGrounded())
+        if (Input.GetButtonDown("Jump") && CheckGrounded() && noJumpingTimer <= 0.0f)
         {
+            noJumpingTimer = noJumpingTime; Debug.Log("noJumpingTimer == " + noJumpingTimer);
             StartCoroutine(WaitBeforeJump()); 
         }
         playerVelocity.y += gravityValue * Time.deltaTime;
         controller.Move(playerVelocity * Time.deltaTime);
+        if(noJumpingTimer >= 0.0f) { noJumpingTimer -= Time.deltaTime; Debug.Log("noJumpingTimer == " + noJumpingTimer); }
     }
 
     private void FixedUpdate()
