@@ -91,7 +91,7 @@ public class PlayerControl : MonoBehaviour
 
     private void Climb()
     {
-
+        
     }
 
     private void Run(Vector3 move)
@@ -122,60 +122,62 @@ public class PlayerControl : MonoBehaviour
             }
         }
 
-        if (CheckGrounded() && playerVelocity.y < 0) //Ensures that the player stops when hitting the ground
+        if(!IsClimbing)
         {
-            playerVelocity.y = 0f;
-        }
-
-        if(Input.GetKeyDown(KeyCode.E))
-        {
-            StartCoroutine(PunchAttack(AttackCollider)); 
-        }
-
-        Vector3 move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-        Quaternion cameraRotation = cameraTransform.transform.rotation;
-        cameraRotation.x = 0;
-        cameraRotation.z = 0;
-        move = cameraRotation * move;
-        if(!Input.GetKey(KeyCode.LeftShift))
-        {
-            controller.Move(move * Time.deltaTime * playerSpeed);
-            if(Anim.GetBool("IsRunning") == true)
+            if (CheckGrounded() && playerVelocity.y < 0) //Ensures that the player stops when hitting the ground
             {
-                Anim.SetBool("IsRunning", false); 
+                playerVelocity.y = 0f;
             }
-        }
-        else if (Input.GetKey(KeyCode.LeftShift))
-        {
-            Run(move); 
-        }
-        
 
-        if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
-        {
-            Anim.SetBool("IsWalking", true);
-        }
-        else if (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0)
-        {
-            Anim.SetBool("IsWalking", false);
-        }
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                StartCoroutine(PunchAttack(AttackCollider));
+            }
 
-        if (move != Vector3.zero)
-        {
-            gameObject.transform.forward = move;
-        }
+            Vector3 move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
+            Quaternion cameraRotation = cameraTransform.transform.rotation;
+            cameraRotation.x = 0;
+            cameraRotation.z = 0;
+            move = cameraRotation * move;
+            if (!Input.GetKey(KeyCode.LeftShift))
+            {
+                controller.Move(move * Time.deltaTime * playerSpeed);
+                if (Anim.GetBool("IsRunning") == true)
+                {
+                    Anim.SetBool("IsRunning", false);
+                }
+            }
+            else if (Input.GetKey(KeyCode.LeftShift))
+            {
+                Run(move);
+            }
 
-        // Changes the height position of the player..
-        if (Input.GetButtonDown("Jump") && CheckGrounded() && noJumpingTimer <= 0.0f)
-        {
-            noJumpingTimer = noJumpingTime; Debug.Log("noJumpingTimer == " + noJumpingTimer);
-            StartCoroutine(WaitBeforeJump()); 
+
+            if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
+            {
+                Anim.SetBool("IsWalking", true);
+            }
+            else if (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0)
+            {
+                Anim.SetBool("IsWalking", false);
+            }
+
+            if (move != Vector3.zero)
+            {
+                gameObject.transform.forward = move;
+            }
+
+            // Changes the height position of the player..
+            if (Input.GetButtonDown("Jump") && CheckGrounded() && noJumpingTimer <= 0.0f)
+            {
+                noJumpingTimer = noJumpingTime; Debug.Log("noJumpingTimer == " + noJumpingTimer);
+                StartCoroutine(WaitBeforeJump());
+            }
+            playerVelocity.y += gravityValue * Time.deltaTime;
+            controller.Move(playerVelocity * Time.deltaTime);
+            if (noJumpingTimer >= 0.0f) { noJumpingTimer -= Time.deltaTime; Debug.Log("noJumpingTimer == " + noJumpingTimer); }
         }
-        playerVelocity.y += gravityValue * Time.deltaTime;
-        controller.Move(playerVelocity * Time.deltaTime);
-        if(noJumpingTimer >= 0.0f) { noJumpingTimer -= Time.deltaTime; Debug.Log("noJumpingTimer == " + noJumpingTimer); }
     }
-
     private void FixedUpdate()
     {
         
