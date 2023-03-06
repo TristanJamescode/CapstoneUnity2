@@ -104,6 +104,20 @@ public class BasicEnemy : BasicEntity
             enemy.AttackPlayer();
         }
     }
+    protected class StunState : BaseState
+    {
+        BasicEnemy enemy;
+        public StunState(BasicEnemy enemy, string name, StateMachine stateMachine) : base(name, stateMachine)
+        {
+            this.enemy = enemy;
+        }
+        public override void OnEnter()
+        {
+        }
+        public override void Update()
+        {
+        }
+    }
     protected class C_IsPlayerInRange : TransactionCondition
     {
         protected float Range = 0;
@@ -144,6 +158,18 @@ public class BasicEnemy : BasicEntity
             return (enemy.TimetoLost < 0);
         }
     }
+    protected class C_IsStun : TransactionCondition
+    {
+        BasicEnemy enemy;
+        public C_IsStun(BasicEnemy enemy)
+        {
+            this.enemy = enemy;
+        }
+        public override bool TriggerCheck()
+        {
+            return enemy.Knockback_Counter <= 0;
+        }
+    }
     protected class C_IsReachedtoWalkPoint : TransactionCondition
     {
         BasicEnemy enemy;
@@ -162,25 +188,28 @@ public class BasicEnemy : BasicEntity
             return returnbool;
         }
     }
+    protected BaseState State_Idle, State_Patrol, State_Chasing, State_Attacking, State_Stun;
     protected virtual void Awake()
     {
         if (Player == null && GameObject.FindGameObjectWithTag("Player") != null) { Player = GameObject.FindGameObjectWithTag("Player").transform; } //Find Player if exists
         stateMachine = gameObject.AddComponent<StateMachine>();
 
-        BaseState Idle = new IdleState(this, "Idle", stateMachine);
-        BaseState Patrol = new PatrolState(this, "Patrol", stateMachine);
-        BaseState Chasing = new ChasingState(this, "Chasing", stateMachine);
-        BaseState Attacking = new AttackingState(this, "Attacking", stateMachine);
+        State_Idle = new IdleState(this, "Idle", stateMachine);
+        State_Patrol = new PatrolState(this, "Patrol", stateMachine);
+        State_Chasing = new ChasingState(this, "Chasing", stateMachine);
+        State_Attacking = new AttackingState(this, "Attacking", stateMachine);
+        State_Stun = new StunState(this, "Stun", stateMachine);
 
-        Transaction idletopatrol = new(Patrol);
-        Transaction idletochasing = new(Chasing);
-        Transaction patroltochasing = new(Chasing);
-        Transaction patroltoidle = new(Idle);
-        Transaction chasingtoattacking = new(Attacking);
-        Transaction chasingtoidle = new(Idle);
-        Transaction chasingtoidle2 = new(Idle);
-        Transaction attackingtochasing = new(Chasing);
-        Transaction attackingtoidle = new(Idle);
+        Transaction idletopatrol = new(State_Patrol);
+        Transaction idletochasing = new(State_Chasing);
+        Transaction patroltochasing = new(State_Chasing);
+        Transaction patroltoidle = new(State_Idle);
+        Transaction chasingtoattacking = new(State_Attacking);
+        Transaction chasingtoidle = new(State_Idle);
+        Transaction chasingtoidle2 = new(State_Idle);
+        Transaction attackingtochasing = new(State_Chasing);
+        Transaction attackingtoidle = new(State_Idle);
+        Transaction stuntoidle = new(State_Idle);
 
         TransactionCondition c_IsPlayerInAttackRange = new C_IsPlayerInRange(this, attackRange);
         TransactionCondition c_IsPlayerInAttackOutRange = new C_IsPlayerInRange(this, attackRange * 1.1f);
@@ -188,16 +217,18 @@ public class BasicEnemy : BasicEntity
         TransactionCondition c_IsPlayerInLostRange = new C_IsPlayerInRange(this, lostRange);
         //TransactionCondition c_IsAttackFinished = new C_IsAttackFinished(this);
         TransactionCondition c_IsTimetoLost = new C_IsTimetoLost(this);
+        TransactionCondition c_IsStun = new C_IsStun(this);
 
-        Idle.addTransaction(idletopatrol);
-        Idle.addTransaction(idletochasing);
-        Patrol.addTransaction(patroltochasing);
-        Patrol.addTransaction(patroltoidle);
-        Chasing.addTransaction(chasingtoattacking);
-        Chasing.addTransaction(chasingtoidle);
-        Chasing.addTransaction(chasingtoidle2);
-        Attacking.addTransaction(attackingtoidle);
-        Attacking.addTransaction(attackingtochasing);
+        State_Idle.addTransaction(idletopatrol);
+        State_Idle.addTransaction(idletochasing);
+        State_Patrol.addTransaction(patroltochasing);
+        State_Patrol.addTransaction(patroltoidle);
+        State_Chasing.addTransaction(chasingtoattacking);
+        State_Chasing.addTransaction(chasingtoidle);
+        State_Chasing.addTransaction(chasingtoidle2);
+        State_Attacking.addTransaction(attackingtoidle);
+        State_Attacking.addTransaction(attackingtochasing);
+        State_Stun.addTransaction(stuntoidle);
 
         idletochasing.addCondition(c_IsPlayerInSightRange, true);
         patroltochasing.addCondition(c_IsPlayerInSightRange, true);
@@ -208,10 +239,11 @@ public class BasicEnemy : BasicEntity
         //attackingtochasing.addCondition(c_IsAttackFinished, true);
         attackingtochasing.addCondition(c_IsPlayerInAttackOutRange, false);
         attackingtoidle.addCondition(c_IsPlayerInLostRange, false);
+        stuntoidle.addCondition(c_IsStun, true);
 
         Player = GameObject.FindGameObjectWithTag("Player").transform;
         agent = GetComponent<NavMeshAgent>();
-        stateMachine.setInitState(Idle);
+        stateMachine.setInitState(State_Idle);
     }
     protected override void Update()
     {
@@ -223,17 +255,18 @@ public class BasicEnemy : BasicEntity
     {
         base.Take_Knockback(Amount, Direction);
         Knockback_Counter = 2;
+        stateMachine.ChangeState(State_Stun);
         Direction.Normalize();
         Vector3 KnockbackVector = Direction * Amount;
         Knockback_Velocity = KnockbackVector;
-        //if (body != null) body.AddForce(Direction * Amount, ForceMode.VelocityChange);
     }
     public override void Update_KnockbackRelated()
     {
+        base.Update_KnockbackRelated();
         if (Knockback_Velocity != Vector3.zero)
         {
+            agent.velocity = Knockback_Velocity;
             Knockback_Velocity *= 0.9f;
-            agent.Move(Knockback_Velocity * Time.deltaTime);
             if (Knockback_Velocity.magnitude < 0.5f) Knockback_Velocity = Vector3.zero;
         }
     }

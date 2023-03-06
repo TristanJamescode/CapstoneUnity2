@@ -136,15 +136,14 @@ MonoBehaviour:
   Health: 100
   Health_Max: 100
   Invincible_Time: 0
-  body: {fileID: 0}
   agent: {fileID: 6458669411461625331}
   Player: {fileID: 0}
   whatIsGround:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1
   whatIsPlayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   walkPoint: {x: 0, y: 0, z: 0}
   walkPointRange: 0
   timeBetweenAttacks: 3

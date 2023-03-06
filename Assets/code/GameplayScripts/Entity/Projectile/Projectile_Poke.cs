@@ -9,6 +9,10 @@ public class Projectile_Poke : BasicProjectile
     public float PokeTime = 1;
     List<Collider> colliders = new List<Collider>();
     public Transform TransformUser;
+    protected override void Start()
+    {
+        base.Start();
+    }
     protected override void Update()
     {
         if (TransformUser == null)
@@ -46,5 +50,8 @@ public class Projectile_Poke : BasicProjectile
                 other.GetComponent<BasicEntity>().Take_Damage(Projectile_Damage);
             }
         }
+    }
+    protected override void OnCollisionEnter(Collision collision)
+    {
     }
 }

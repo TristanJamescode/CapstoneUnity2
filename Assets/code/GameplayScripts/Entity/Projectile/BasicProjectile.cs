@@ -7,19 +7,19 @@ public class BasicProjectile : BasicEntity
     public LayerMask whatIsEnemies;
     public LayerMask whatIsPlayer;
 
-    [Range(0.0f, 1.0f)]
-    public float bounciness;
-    public bool useGravity;
-    PhysicMaterial physics_mat;
-    //Projectile
+    [Range(0.0f, 1.0f)] protected float bounciness;
+    [SerializeField] protected bool useGravity;
+    protected PhysicMaterial physics_mat;
     public int collisions_max = 0;
-    public int collisions=0;
+    private int collisions=0;
     public float maxLifetime = 10;
     //Targetsettings
     public GameObject ShootingFrom;
     public float Projectile_Damage = 10;
-    private void Start()
+    protected Rigidbody RigidBody;
+    protected override void Start()
     {
+        base.Start();
         Setup();
     }
     protected override void Update()
@@ -48,16 +48,37 @@ public class BasicProjectile : BasicEntity
             OnDeath();
         }
     }
+    protected virtual void OnCollisionEnter(Collision collision)
+    {
+        if (ShootingFrom == null) return;
+        if(collision.collider.CompareTag("Untagged")){ //hit with no tag
+            //Debug.Log("Ishit");
+            collisions++;
+            maxLifetime -= 1.0f;
+            if (collisions > collisions_max) OnDeath();
+        }
+        else if(collision.collider.CompareTag(ShootingFrom.tag)) //it hit to shooting owner
+        {
+        } 
+        else if(!collision.collider.CompareTag(this.tag)) 
+        {
+            collision.collider.GetComponent<BasicEntity>().Take_Damage(Projectile_Damage);
+            Vector3 KnockbackDirection = collision.collider.transform.position - transform.position;
+            collision.collider.GetComponent<BasicEntity>().Take_Knockback(20, KnockbackDirection);
+            this.OnDeath();
+        }
+    }
     private protected void Setup()
     {
-        /*
+        RigidBody = GetComponent<Rigidbody>();
+        
         physics_mat = new PhysicMaterial();
         physics_mat.bounciness = bounciness;
         physics_mat.frictionCombine = PhysicMaterialCombine.Minimum;
         physics_mat.bounceCombine = PhysicMaterialCombine.Maximum;
 
         GetComponent<SphereCollider>().material = physics_mat;
-        */
-        GetComponent<Rigidbody>().useGravity = useGravity;
+        
+        RigidBody.useGravity = useGravity;
     }
 }

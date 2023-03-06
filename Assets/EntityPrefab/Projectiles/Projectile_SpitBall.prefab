@@ -94,7 +94,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4893935830295956983}
   m_Material: {fileID: 0}
-  m_IsTrigger: 1
+  m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.6
@@ -110,7 +110,7 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 0
+  m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 1
   m_Constraints: 0
@@ -129,18 +129,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Health: 100
   Health_Max: 100
-  InvincibilityFrame: 0
-  Invincible: 0
+  Invincible_Time: 0
   whatIsEnemies:
     serializedVersion: 2
     m_Bits: 64
   whatIsPlayer:
     serializedVersion: 2
     m_Bits: 8
-  bounciness: 0
   useGravity: 0
-  collisions_max: 3
-  collisions: 0
+  collisions_max: 1
   maxLifetime: 10
-  projectilefrom: 1
+  ShootingFrom: {fileID: 0}
   Projectile_Damage: 10

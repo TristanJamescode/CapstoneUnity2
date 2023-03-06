@@ -13,11 +13,13 @@ public class BasicEntity : MonoBehaviour
     //knockback value
     protected Vector3 Knockback_Velocity;
     protected float Knockback_Counter = 0;
+    protected virtual void Start()
+    {
+    }
     protected virtual void Update()
     {
         Update_InvincibilityFrame();
         Update_KnockbackRelated();
-        if (Knockback_Counter > 0) Knockback_Counter -= Time.deltaTime;
     }
     protected virtual void Update_InvincibilityFrame()
     {
@@ -29,8 +31,9 @@ public class BasicEntity : MonoBehaviour
         }
         Invincible = IsInvicible;
     }
-    public virtual void Update_KnockbackRelated()
-    {}
+    public virtual void Update_KnockbackRelated(){
+        if (Knockback_Counter > 0) Knockback_Counter -= Time.deltaTime;
+    }
     public virtual void Take_Damage(float Damage_)
     {
         if (Invincible) return;

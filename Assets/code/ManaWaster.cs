@@ -19,6 +19,10 @@ public class ManaWaster : MonoBehaviour
         {
             mana.DecreasedMana(Manawaste);
         }
+        if(collision.gameObject.TryGetComponent(out BasicPlayer player))
+        {
+            player.Mana_Use(80);
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -26,6 +30,10 @@ public class ManaWaster : MonoBehaviour
         if (other.gameObject.TryGetComponent(out PlayerMana mana))
         {
             mana.DecreasedMana(Manawaste);
+        }
+        if (other.gameObject.TryGetComponent(out BasicPlayer player))
+        {
+            player.Mana_Use(80);
         }
     }
 }
