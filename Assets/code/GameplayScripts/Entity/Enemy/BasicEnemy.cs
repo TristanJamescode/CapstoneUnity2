@@ -22,7 +22,7 @@ public class BasicEnemy : BasicEntity
     public float attackRange, sightRange, lostRange;
     protected float TimetoLost = 0.0f;
     public float TimetoLostEntity = 3.0f;
-    protected StateMachine stateMachine;
+    protected StateMachine _StateMachine;
     public string Statename;
     protected class IdleState : BaseState
     {
@@ -192,13 +192,13 @@ public class BasicEnemy : BasicEntity
     protected virtual void Awake()
     {
         if (Player == null && GameObject.FindGameObjectWithTag("Player") != null) { Player = GameObject.FindGameObjectWithTag("Player").transform; } //Find Player if exists
-        stateMachine = gameObject.AddComponent<StateMachine>();
+        _StateMachine = gameObject.AddComponent<StateMachine>();
 
-        State_Idle = new IdleState(this, "Idle", stateMachine);
-        State_Patrol = new PatrolState(this, "Patrol", stateMachine);
-        State_Chasing = new ChasingState(this, "Chasing", stateMachine);
-        State_Attacking = new AttackingState(this, "Attacking", stateMachine);
-        State_Stun = new StunState(this, "Stun", stateMachine);
+        State_Idle = new IdleState(this, "Idle", _StateMachine);
+        State_Patrol = new PatrolState(this, "Patrol", _StateMachine);
+        State_Chasing = new ChasingState(this, "Chasing", _StateMachine);
+        State_Attacking = new AttackingState(this, "Attacking", _StateMachine);
+        State_Stun = new StunState(this, "Stun", _StateMachine);
 
         Transaction idletopatrol = new(State_Patrol);
         Transaction idletochasing = new(State_Chasing);
@@ -243,19 +243,19 @@ public class BasicEnemy : BasicEntity
 
         Player = GameObject.FindGameObjectWithTag("Player").transform;
         agent = GetComponent<NavMeshAgent>();
-        stateMachine.setInitState(State_Idle);
+        _StateMachine.setInitState(State_Idle);
     }
     protected override void Update()
     {
         base.Update();
-        stateMachine.Update();
-        Statename = stateMachine.currentState.name;
+        _StateMachine.Update();
+        Statename = _StateMachine.currentState.name;
     }
     public override void Take_Knockback(float Amount, Vector3 Direction)
     {
         base.Take_Knockback(Amount, Direction);
         Knockback_Counter = 2;
-        stateMachine.ChangeState(State_Stun);
+        _StateMachine.ChangeState(State_Stun);
         Direction.Normalize();
         Vector3 KnockbackVector = Direction * Amount;
         Knockback_Velocity = KnockbackVector;

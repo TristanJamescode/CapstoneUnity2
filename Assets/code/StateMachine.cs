@@ -6,6 +6,7 @@ using UnityEngine;
 public class StateMachine : MonoBehaviour
 {
     public BaseState currentState = null;
+    //public List<BaseState> subState = new List<BaseState>();
     public void setInitState(BaseState initState)
     {
         currentState = initState;

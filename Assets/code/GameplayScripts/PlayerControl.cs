@@ -10,29 +10,103 @@ using UnityEngine.Animations;
 public class PlayerControl : MonoBehaviour
 {
     private CharacterController controller;
+    [Header("Movement")]
     private Vector3 playerVelocity;
     [SerializeField] private float playerSpeed = 2.0f;
+
+    [Header("Jumping")]
     [SerializeField] private float jumpHeight = 1.0f;
     private float gravityValue = -9.80f;
     private float noJumpingTimer = 0.0f; //Used to prevent jump inputs in quick succession from allowing players to jump really high.
     [SerializeField] private float noJumpingTime = 2.2f; //This one is used to let us adjust the timing of the grce period in the editor.
+
     [SerializeField] GameObject AttackBox;
     [SerializeField] private LayerMask Layer_enemy;
-    private BoxCollider AttackCollider; 
-    private Animator Anim;
+    private BoxCollider AttackCollider;
     private PlayerMana MyMana;
     private GameObject ObjInFrontOfPlayer;
-    private bool IsClimbing = false; 
-    public bool IsAttacking = false; 
+    private bool IsClimbing = false;
+    public bool IsAttacking = false;
     [SerializeField] private Transform cameraTransform;
-    private void Start()
+    //Anims
+    private Animator _Anim;
+    private float _Anim_WalkSpeed;
+    //States
+    StateMachine _StateMachine;
+    public string statename;
+    protected class GroundState : BaseState
     {
-        controller = this.gameObject.GetComponent<CharacterController>();
-        Anim = this.gameObject.GetComponent<Animator>();
-        AttackCollider = AttackBox.GetComponent<BoxCollider>();
-        MyMana = this.gameObject.GetComponent<PlayerMana>(); 
+        PlayerControl player;
+        public GroundState(PlayerControl player, string name, StateMachine stateMachine) : base(name, stateMachine)
+        {
+            this.player = player;
+        }
+        public override void OnEnter()
+        {
+            player._Anim.SetBool("IsGround", true);
+        }
+        public override void Update()
+        {
+            player.Move();
+        }
     }
-
+    protected class AirState : BaseState
+    {
+        PlayerControl player;
+        public AirState(PlayerControl player, string name, StateMachine stateMachine) : base(name, stateMachine)
+        {
+            this.player = player;
+        }
+        public override void OnEnter()
+        {
+            player._Anim.SetBool("IsGround", false);
+        }
+        public override void Update()
+        {
+            player.Move();
+        }
+    }
+    protected class ClimbingState : BaseState
+    {
+        PlayerControl player;
+        public ClimbingState(PlayerControl player, string name, StateMachine stateMachine) : base(name, stateMachine)
+        {
+            this.player = player;
+        }
+        public override void OnEnter()
+        {
+            player._Anim.SetBool("IsClimbing", true);
+        }
+        public override void Update()
+        {
+        }
+        public override void OnExit()
+        {
+            player._Anim.SetBool("IsClimbing", false);
+        }
+    }
+    protected class C_IsGround : TransactionCondition
+    {
+        protected PlayerControl player;
+        public C_IsGround(PlayerControl player)
+        {
+            this.player = player;
+        }
+        public override bool TriggerCheck()
+        {
+            return player.CheckGrounded();
+        }
+    }
+    private struct ControlInputs{
+        public bool jump,jump_hold;
+        public float axis_Horizontal, axis_Vertical;
+        public bool run;
+        public bool interact, interact_hold;
+    }
+    private ControlInputs _ControlInputs = new ControlInputs();
+    private BaseState State_Ground, State_Air, State_Climbing;
+    private Transaction Tr_Ground_Air, Tr_Air_Ground;
+    //private BaseState State_Idle, State_Walk, State_Run, State_Attack, State_Jump, State_InAir, State_HitBack; //MainState
     private bool CheckGrounded() //Check is on ground with ray, this prevent player can not jump while on tilt ground
     {
         if (controller.isGrounded) { return true; } //This is very odd, sometimes return false even it looks touch the ground
@@ -40,11 +114,9 @@ public class PlayerControl : MonoBehaviour
         var tolerance = 0.3f;
         return Physics.Raycast(ray, tolerance);
     }
-
-    private bool CheckClimableWall()
+    private bool CheckClimableWall() //Check Player's front wall are climable
     {
         RaycastHit hit; 
-
         if(Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 1.0f))
         {
             Debug.DrawRay(transform.position, transform.TransformDirection(Vector3.forward) * hit.distance, Color.green);
@@ -62,10 +134,9 @@ public class PlayerControl : MonoBehaviour
         }
         return false; 
     }
-
     IEnumerator PunchAttack(Collider AttackCollider)
     {
-        Anim.SetBool("Attack", true);
+        _Anim.SetBool("Attack", true);
         IsAttacking = true;
         Collider[] cols = Physics.OverlapBox(AttackCollider.bounds.center, AttackCollider.bounds.extents,
            AttackCollider.transform.rotation, Layer_enemy); 
@@ -76,56 +147,116 @@ public class PlayerControl : MonoBehaviour
             c.GetComponentInParent<BasicEnemy>().Take_Knockback(2, c.gameObject.transform.position-this.transform.position);
         }
         yield return new WaitForSeconds(1.90f);
-        Anim.SetBool("Attack", false);
+        _Anim.SetBool("Attack", false);
         IsAttacking = false; 
     }
-
     IEnumerator WaitBeforeJump()
     {
-        Anim.SetBool("HasJumped", true); 
+        _Anim.SetBool("HasJumped", true); 
         yield return new WaitForSeconds(0.48f);
         playerVelocity.y += Mathf.Sqrt(jumpHeight * -3.0f * gravityValue);
-        yield return new WaitForSeconds(1.82f);
-        Anim.SetBool("HasJumped", false); 
+        _Anim.SetBool("HasJumped", false);
     }
-
+    private void GetInputs()
+    {
+        _ControlInputs.jump = Input.GetButtonDown("Jump");
+        _ControlInputs.jump_hold = Input.GetButton("Jump");
+        _ControlInputs.axis_Horizontal = Input.GetAxis("Horizontal");
+        _ControlInputs.axis_Vertical = Input.GetAxis("Vertical");
+        _ControlInputs.run = Input.GetButton("Sprint");
+        _ControlInputs.interact = Input.GetButtonDown("Interact");
+        _ControlInputs.interact_hold = Input.GetButton("Interact");
+    }
     private void Climb()
     {
         
     }
-
+    private void Walk(Vector3 move)
+    {
+        _Anim.SetFloat("Speed", 1.0f, 0.1f, Time.deltaTime);
+        controller.Move(move * Time.deltaTime * playerSpeed);
+    }
     private void Run(Vector3 move)
     {
         if(MyMana.mana > 0)
         {
             controller.Move(move * Time.deltaTime * (playerSpeed * 3));
-            Anim.SetBool("IsRunning", true);
+            _Anim.SetFloat("Speed", 2, 0.1f, Time.deltaTime);
             MyMana.DecreasedMana(10.0f * Time.deltaTime);
         }
         else
         {
-            Anim.SetBool("IsRunning", false); 
-            Anim.SetBool("IsWalking", true);
+            _Anim.SetFloat("Speed", 1.2f, 0.1f, Time.deltaTime);
             controller.Move(move * Time.deltaTime * playerSpeed); 
         }
     }
+    private void Move()
+    {
+        Vector3 move = new Vector3(_ControlInputs.axis_Horizontal, 0, _ControlInputs.axis_Vertical);
+        Quaternion cameraRotation = cameraTransform.transform.rotation;
+        cameraRotation.x = 0;
+        cameraRotation.z = 0;
+        move = cameraRotation * move * playerSpeed;
+        if (move == Vector3.zero)
+        {
+            _Anim.SetFloat("Speed", 0.0f, 0.1f, Time.deltaTime);
+        }
+        else
+        {
+            gameObject.transform.forward = move;
+            if (!Input.GetKey(KeyCode.LeftShift))
+            {
+                Walk(move);
+            }
+            else if (Input.GetKey(KeyCode.LeftShift))
+            {
+                Run(move);
+            }
+        }
+    }
+    private void Start()
+    {
+        _StateMachine = gameObject.AddComponent<StateMachine>();
 
+        State_Ground = new GroundState(this, "Ground", _StateMachine);
+        State_Air = new AirState(this, "Air", _StateMachine);
+        State_Climbing = new ClimbingState(this, "Climbing", _StateMachine);
+
+        Tr_Ground_Air = new Transaction(State_Air);
+        Tr_Air_Ground = new Transaction(State_Ground);
+
+        TransactionCondition c_IsGround = new C_IsGround(this);
+
+        Tr_Ground_Air.addCondition(c_IsGround, true);
+        Tr_Air_Ground.addCondition(c_IsGround, false);
+
+        State_Ground.addTransaction(Tr_Ground_Air);
+
+        _StateMachine.setInitState(State_Ground);
+
+        controller = this.gameObject.GetComponent<CharacterController>();
+        _Anim = this.gameObject.GetComponent<Animator>();
+        AttackCollider = AttackBox.GetComponent<BoxCollider>();
+        MyMana = this.gameObject.GetComponent<PlayerMana>();
+    }
     void Update()
     {
+        GetInputs();
+        _StateMachine.Update();
+        statename = _StateMachine.currentState.name;
         if(CheckClimableWall())
         {
             if(Input.GetKeyDown(KeyCode.C))
             {
+                _StateMachine.ChangeState(State_Climbing);
                 IsClimbing = true;
-                Anim.SetBool("IsClimbing", true); 
-
             }
         }
-
         if(!IsClimbing)
         {
             if (CheckGrounded() && playerVelocity.y < 0) //Ensures that the player stops when hitting the ground
             {
+                _StateMachine.ChangeState(State_Ground);
                 playerVelocity.y = 0f;
             }
 
@@ -133,53 +264,21 @@ public class PlayerControl : MonoBehaviour
             {
                 StartCoroutine(PunchAttack(AttackCollider));
             }
-
-            Vector3 move = new Vector3(Input.GetAxis("Horizontal"), 0, Input.GetAxis("Vertical"));
-            Quaternion cameraRotation = cameraTransform.transform.rotation;
-            cameraRotation.x = 0;
-            cameraRotation.z = 0;
-            move = cameraRotation * move;
-            if (!Input.GetKey(KeyCode.LeftShift))
-            {
-                controller.Move(move * Time.deltaTime * playerSpeed);
-                if (Anim.GetBool("IsRunning") == true)
-                {
-                    Anim.SetBool("IsRunning", false);
-                }
-            }
-            else if (Input.GetKey(KeyCode.LeftShift))
-            {
-                Run(move);
-            }
-
-
-            if (Input.GetAxis("Horizontal") != 0 || Input.GetAxis("Vertical") != 0)
-            {
-                Anim.SetBool("IsWalking", true);
-            }
-            else if (Input.GetAxis("Horizontal") == 0 && Input.GetAxis("Vertical") == 0)
-            {
-                Anim.SetBool("IsWalking", false);
-            }
-
-            if (move != Vector3.zero)
-            {
-                gameObject.transform.forward = move;
-            }
-
             // Changes the height position of the player..
             if (Input.GetButtonDown("Jump") && CheckGrounded() && noJumpingTimer <= 0.0f)
             {
+                _Anim.SetTrigger("JumpReady");
                 noJumpingTimer = noJumpingTime; Debug.Log("noJumpingTimer == " + noJumpingTimer);
                 StartCoroutine(WaitBeforeJump());
             }
+            //Gravity
             playerVelocity.y += gravityValue * Time.deltaTime;
             controller.Move(playerVelocity * Time.deltaTime);
+
             if (noJumpingTimer >= 0.0f) { noJumpingTimer -= Time.deltaTime; Debug.Log("noJumpingTimer == " + noJumpingTimer); }
         }
     }
     private void FixedUpdate()
     {
-        
     }
 }
