@@ -2363,7 +2363,7 @@ BoxCollider:
   m_GameObject: {fileID: 852974359}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 2
   m_Size: {x: 1, y: 2, z: 1}
   m_Center: {x: 0, y: 1, z: 0}
@@ -2374,7 +2374,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 852974359}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e67a2a147c63caa4da1f44f94759069d, type: 3}
   m_Name: 
@@ -2389,7 +2389,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 852974359}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4d091a30e6fc4b44fbd7d8649ceb64a0, type: 3}
   m_Name: 
@@ -4430,14 +4430,14 @@ PrefabInstance:
     m_RemovedComponents: []
     m_AddedGameObjects:
     - targetCorrespondingSourceObject: {fileID: 6636888433022755381, guid: e36d9c9e24c3c7a46aebee687a41a746, type: 3}
+      insertIndex: 0
+      addedObject: {fileID: 1146149624}
+    - targetCorrespondingSourceObject: {fileID: 6636888433022755381, guid: e36d9c9e24c3c7a46aebee687a41a746, type: 3}
       insertIndex: -1
       addedObject: {fileID: 421623500}
     - targetCorrespondingSourceObject: {fileID: 6636888433022755381, guid: e36d9c9e24c3c7a46aebee687a41a746, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1053479585}
-    - targetCorrespondingSourceObject: {fileID: 6636888433022755381, guid: e36d9c9e24c3c7a46aebee687a41a746, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1146149624}
   m_SourcePrefab: {fileID: 100100000, guid: e36d9c9e24c3c7a46aebee687a41a746, type: 3}
 --- !u!1 &1541888408
 GameObject:
@@ -5930,7 +5930,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2092806396, guid: e95455346f40059438c133a4d2ab4573, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2092806396, guid: e95455346f40059438c133a4d2ab4573, type: 3}
       propertyPath: m_Center.y
@@ -6026,7 +6026,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1832804358857490287, guid: e95455346f40059438c133a4d2ab4573, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1832804358857490287, guid: e95455346f40059438c133a4d2ab4573, type: 3}
       propertyPath: cameraTransform
@@ -6186,7 +6186,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6799952583139029555, guid: e95455346f40059438c133a4d2ab4573, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6799952583139029555, guid: e95455346f40059438c133a4d2ab4573, type: 3}
       propertyPath: DeathSound
