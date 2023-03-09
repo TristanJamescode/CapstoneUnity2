@@ -28,17 +28,16 @@ public class PlayerControl : MonoBehaviour
     public bool IsAttacking = false;
     [SerializeField] private Transform cameraTransform;
 
-    [Header("References-Climing")]
-    public LayerMask whatIsWall;
+    //[Header("References-Climing")]
+    //public LayerMask whatIsWall;
 
     [Header("Climbing")]
     public float climbSpeed;
     public float maxClimbTime;
     private float climbTimer;
-
+    private bool B_Inf_Climbing;
     //Anims
     private Animator _Anim;
-    private float _Anim_WalkSpeed;
     //States
     StateMachine _StateMachine;
     public string statename;
@@ -52,6 +51,7 @@ public class PlayerControl : MonoBehaviour
         public override void OnEnter()
         {
             player._Anim.SetBool("IsGround", true);
+            player.climbTimer = player.maxClimbTime;
         }
         public override void Update()
         {
@@ -96,9 +96,12 @@ public class PlayerControl : MonoBehaviour
         }
         public override void Update()
         {
+
+            if (!player.B_Inf_Climbing) player.climbTimer -= Time.deltaTime;
             player.controller.Move(new Vector3(0, player.climbSpeed*Time.deltaTime,0));
             //if (!player.CheckClimableWall()) stateMachine.ChangeState(player.State_Air);
-            if (player._ControlInputs.jump) { stateMachine.ChangeState(player.State_Air);}
+            if (player._ControlInputs.jump) stateMachine.ChangeState(player.State_Air);
+            if (!player.B_Inf_Climbing &&player.climbTimer < 0) stateMachine.ChangeState(player.State_Air);
         }
         public override void OnExit()
         {
@@ -235,6 +238,7 @@ public class PlayerControl : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.C))
             {
                 _StateMachine.ChangeState(State_Climbing);
+                return;
             }
         }
         if (CheckGrounded() && playerVelocity.y < 0) //Ensures that the player stops when hitting the ground
@@ -260,8 +264,10 @@ public class PlayerControl : MonoBehaviour
         Tr_Air_Ground.addCondition(c_IsGround, false);
 
         State_Ground.addTransaction(Tr_Ground_Air);
-
+        
         _StateMachine.setInitState(State_Ground);
+
+        B_Inf_Climbing = (maxClimbTime <= 0);
 
         controller = this.gameObject.GetComponent<CharacterController>();
         _Anim = this.gameObject.GetComponent<Animator>();

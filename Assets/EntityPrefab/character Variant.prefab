@@ -392,6 +392,14 @@ PrefabInstance:
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 48ffea126789bf64787e00486959511c, type: 2}
+    - target: {fileID: 5866666021909216657, guid: 56ccb0fb58f691d40b3c26d974c75719, type: 3}
+      propertyPath: m_CullingMode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 56ccb0fb58f691d40b3c26d974c75719, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6240733294840144465, guid: 56ccb0fb58f691d40b3c26d974c75719, type: 3}
       propertyPath: m_Layer
       value: 3
@@ -494,13 +502,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerSpeed: 2
   jumpHeight: 1
-  gravityValue: -9.81
+  noJumpingTime: 2.2
   AttackBox: {fileID: 2136739254495343936}
   Layer_enemy:
     serializedVersion: 2
     m_Bits: 64
   IsAttacking: 0
   cameraTransform: {fileID: 0}
+  climbSpeed: 0
+  maxClimbTime: 0
+  statename: 
 --- !u!114 &6799952583139029555
 MonoBehaviour:
   m_ObjectHideFlags: 0
