@@ -25,9 +25,17 @@ public class PlayerControl : MonoBehaviour
     private BoxCollider AttackCollider;
     private PlayerMana MyMana;
     private GameObject ObjInFrontOfPlayer;
-    private bool IsClimbing = false;
     public bool IsAttacking = false;
     [SerializeField] private Transform cameraTransform;
+
+    [Header("References-Climing")]
+    public LayerMask whatIsWall;
+
+    [Header("Climbing")]
+    public float climbSpeed;
+    public float maxClimbTime;
+    private float climbTimer;
+
     //Anims
     private Animator _Anim;
     private float _Anim_WalkSpeed;
@@ -48,6 +56,14 @@ public class PlayerControl : MonoBehaviour
         public override void Update()
         {
             player.Move();
+            // Changes the height position of the player..
+            if (Input.GetButtonDown("Jump") && player.CheckGrounded() && player.noJumpingTimer <= 0.0f)
+            {
+                player._Anim.SetTrigger("JumpReady");
+                player.noJumpingTimer = player.noJumpingTime; Debug.Log("noJumpingTimer == " + player.noJumpingTimer);
+                player.StartCoroutine(player.WaitBeforeJump());
+            }
+            if (player.noJumpingTimer >= 0.0f) { player.noJumpingTimer -= Time.deltaTime; Debug.Log("noJumpingTimer == " + player.noJumpingTimer); }
         }
     }
     protected class AirState : BaseState
@@ -75,10 +91,14 @@ public class PlayerControl : MonoBehaviour
         }
         public override void OnEnter()
         {
+            player._Anim.SetTrigger("ClimbingTrigger");
             player._Anim.SetBool("IsClimbing", true);
         }
         public override void Update()
         {
+            player.controller.Move(new Vector3(0, player.climbSpeed*Time.deltaTime,0));
+            //if (!player.CheckClimableWall()) stateMachine.ChangeState(player.State_Air);
+            if (player._ControlInputs.jump) { stateMachine.ChangeState(player.State_Air);}
         }
         public override void OnExit()
         {
@@ -106,7 +126,6 @@ public class PlayerControl : MonoBehaviour
     private ControlInputs _ControlInputs = new ControlInputs();
     private BaseState State_Ground, State_Air, State_Climbing;
     private Transaction Tr_Ground_Air, Tr_Air_Ground;
-    //private BaseState State_Idle, State_Walk, State_Run, State_Attack, State_Jump, State_InAir, State_HitBack; //MainState
     private bool CheckGrounded() //Check is on ground with ray, this prevent player can not jump while on tilt ground
     {
         if (controller.isGrounded) { return true; } //This is very odd, sometimes return false even it looks touch the ground
@@ -167,10 +186,6 @@ public class PlayerControl : MonoBehaviour
         _ControlInputs.interact = Input.GetButtonDown("Interact");
         _ControlInputs.interact_hold = Input.GetButton("Interact");
     }
-    private void Climb()
-    {
-        
-    }
     private void Walk(Vector3 move)
     {
         _Anim.SetFloat("Speed", 1.0f, 0.1f, Time.deltaTime);
@@ -213,6 +228,20 @@ public class PlayerControl : MonoBehaviour
                 Run(move);
             }
         }
+        playerVelocity.y += gravityValue * Time.deltaTime;
+        controller.Move(playerVelocity * Time.deltaTime);
+        if (CheckClimableWall())
+        {
+            if (Input.GetKeyDown(KeyCode.C))
+            {
+                _StateMachine.ChangeState(State_Climbing);
+            }
+        }
+        if (CheckGrounded() && playerVelocity.y < 0) //Ensures that the player stops when hitting the ground
+        {
+            _StateMachine.ChangeState(State_Ground);
+            playerVelocity.y = 0f;
+        }
     }
     private void Start()
     {
@@ -244,40 +273,12 @@ public class PlayerControl : MonoBehaviour
         GetInputs();
         _StateMachine.Update();
         statename = _StateMachine.currentState.name;
-        if(CheckClimableWall())
+        if (Input.GetKeyDown(KeyCode.E))
         {
-            if(Input.GetKeyDown(KeyCode.C))
-            {
-                _StateMachine.ChangeState(State_Climbing);
-                IsClimbing = true;
-            }
-        }
-        if(!IsClimbing)
-        {
-            if (CheckGrounded() && playerVelocity.y < 0) //Ensures that the player stops when hitting the ground
-            {
-                _StateMachine.ChangeState(State_Ground);
-                playerVelocity.y = 0f;
-            }
-
-            if (Input.GetKeyDown(KeyCode.E))
-            {
-                StartCoroutine(PunchAttack(AttackCollider));
-            }
-            // Changes the height position of the player..
-            if (Input.GetButtonDown("Jump") && CheckGrounded() && noJumpingTimer <= 0.0f)
-            {
-                _Anim.SetTrigger("JumpReady");
-                noJumpingTimer = noJumpingTime; Debug.Log("noJumpingTimer == " + noJumpingTimer);
-                StartCoroutine(WaitBeforeJump());
-            }
-            //Gravity
-            playerVelocity.y += gravityValue * Time.deltaTime;
-            controller.Move(playerVelocity * Time.deltaTime);
-
-            if (noJumpingTimer >= 0.0f) { noJumpingTimer -= Time.deltaTime; Debug.Log("noJumpingTimer == " + noJumpingTimer); }
+            StartCoroutine(PunchAttack(AttackCollider));
         }
     }
+    
     private void FixedUpdate()
     {
     }
