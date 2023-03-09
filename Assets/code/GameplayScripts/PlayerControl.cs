@@ -92,16 +92,62 @@ public class PlayerControl : MonoBehaviour
         public override void OnEnter()
         {
             player._Anim.SetTrigger("ClimbingTrigger");
+            player._Anim.SetFloat("ClimbV", 0);
+            player._Anim.SetFloat("ClimbH", 0);
             player._Anim.SetBool("IsClimbing", true);
         }
         public override void Update()
         {
+            if (player._ControlInputs.axis_Horizontal != 0 || player._ControlInputs.axis_Vertical != 0)
+            {
+                Vector3 offset = player.transform.TransformDirection(Vector2.one * 0.5f);
+                Vector3 checkDirection = Vector3.zero;
+
+                int k = 0;
+                for (int i = 0; i < 4; i++)
+                {
+                    RaycastHit checkHit;
+                    if (Physics.Raycast(player.transform.position + offset, player.transform.forward, out checkHit))
+                    {
+                        checkDirection += checkHit.normal;
+                        k++;
+                    }
+                    offset = Quaternion.AngleAxis(90f, player.transform.forward) * offset;
+                }
+                checkDirection /= k;
+
+                RaycastHit hit;
+                if (Physics.Raycast(player.transform.position, -checkDirection, out hit))
+                {
+                    player.transform.position = Vector3.Lerp(player.transform.position, hit.point + hit.normal * 0.5f, 5f * Time.fixedDeltaTime);
+                    player.transform.forward = Vector3.Lerp(player.transform.forward, -hit.normal, 10f * Time.fixedDeltaTime);
+                }
+            }
 
             if (!player.B_Inf_Climbing) player.climbTimer -= Time.deltaTime;
-            player.controller.Move(new Vector3(0, player.climbSpeed*Time.deltaTime,0));
-            //if (!player.CheckClimableWall()) stateMachine.ChangeState(player.State_Air);
+            if (player._ControlInputs.axis_Vertical != 0)
+            {
+                player._Anim.SetFloat("ClimbV", player._ControlInputs.axis_Vertical, 0.1f, Time.deltaTime);
+                player.controller.Move(new Vector3(0, player.climbSpeed * Time.deltaTime * player._ControlInputs.axis_Vertical, 0));
+                if (player._ControlInputs.axis_Vertical == -1)
+                {
+                    if (player.CheckGrounded()) stateMachine.ChangeState(player.State_Ground);
+                }
+            } 
+            else if (player._ControlInputs.axis_Horizontal != 0)
+            {
+                player._Anim.SetFloat("ClimbH", player._ControlInputs.axis_Horizontal, 0.1f, Time.deltaTime);
+                Vector3 horizontalmove = new Vector3(player._ControlInputs.axis_Horizontal, 0, 0);
+                Quaternion cameraRotation = player.transform.rotation;
+                cameraRotation.x = 0;
+                cameraRotation.z = 0;
+                horizontalmove = cameraRotation * horizontalmove;
+                player.controller.Move(horizontalmove * player.climbSpeed * Time.deltaTime);
+            }
+
+            if (!player.CheckClimableWall()) stateMachine.ChangeState(player.State_Air);
             if (player._ControlInputs.jump) stateMachine.ChangeState(player.State_Air);
-            if (!player.B_Inf_Climbing &&player.climbTimer < 0) stateMachine.ChangeState(player.State_Air);
+            if (!player.B_Inf_Climbing && player.climbTimer < 0) stateMachine.ChangeState(player.State_Air);
         }
         public override void OnExit()
         {
@@ -284,8 +330,46 @@ public class PlayerControl : MonoBehaviour
             StartCoroutine(PunchAttack(AttackCollider));
         }
     }
-    
     private void FixedUpdate()
     {
+    }
+    private void OnAnimatorIK(int layerIndex)
+    {
+        /*
+        if (_StateMachine.currentState == State_Climbing)
+        {
+            Debug.Log("yey");
+            HumanBodyBones[] ikBones = {
+                HumanBodyBones.LeftFoot,
+                HumanBodyBones.RightFoot,
+                HumanBodyBones.LeftHand,
+                HumanBodyBones.RightHand
+            };
+
+            for (int i = 0; i < ikBones.Length; i++)
+            {
+                AvatarIKGoal goal = (AvatarIKGoal)i;
+                Transform t = _Anim.GetBoneTransform(ikBones[i]);
+                Vector3 direction = transform.forward;
+                RaycastHit bonehit;
+                if (Physics.Raycast(t.position - direction, direction * 3f, out bonehit))
+                {
+                    _Anim.SetIKPosition(goal, bonehit.point - direction);
+                    _Anim.SetIKPositionWeight(goal, 1f);
+                }
+                else
+                {
+                    _Anim.SetIKPositionWeight(goal, 0f);
+                }
+            }
+        }
+        else
+        {
+            for(int i =0; i < 4; i++)
+            {
+                _Anim.SetIKPositionWeight((AvatarIKGoal)i, 0f);
+            }
+        }
+        */
     }
 }
