@@ -133,10 +133,18 @@ public class PlayerControl : MonoBehaviour
                 {
                     if (player.CheckGrounded()) stateMachine.ChangeState(player.State_Ground);
                 }
+                if (Input.GetKey(KeyCode.S) && !player._Anim.GetBool("ClimbRev"))
+                {
+                    player._Anim.SetBool("ClimbRev", true);
+                }
+                else if (!Input.GetKey(KeyCode.S) && player._Anim.GetBool("ClimbRev"))
+                {
+                    player._Anim.SetBool("ClimbRev", false);
+                }
             } 
             else if (player._ControlInputs.axis_Horizontal != 0)
-            {
-                player._Anim.SetFloat("ClimbH", player._ControlInputs.axis_Horizontal, 0.1f, Time.deltaTime);
+            { 
+                player._Anim.SetFloat("ClimbH", player._ControlInputs.axis_Horizontal, 0.0f, Time.deltaTime);
                 Vector3 horizontalmove = new Vector3(player._ControlInputs.axis_Horizontal, 0, 0);
                 Quaternion cameraRotation = player.transform.rotation;
                 cameraRotation.x = 0;
@@ -191,12 +199,12 @@ public class PlayerControl : MonoBehaviour
             ObjInFrontOfPlayer = hit.transform.gameObject; 
             if(ObjInFrontOfPlayer.tag == "SteelWall")
             {
-                Debug.Log("This wall can be climbed");
+                //Debug.Log("This wall can be climbed");
                 return true;
             }
             else
             {
-                Debug.Log("This wall cannot be clibed");
+                //Debug.Log("This wall cannot be clibed");
                 return false; 
             }
         }
