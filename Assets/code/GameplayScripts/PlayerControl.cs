@@ -64,11 +64,12 @@ public class PlayerControl : MonoBehaviour
                 player.noJumpingTimer = player.noJumpingTime; Debug.Log("noJumpingTimer == " + player.noJumpingTimer);
                 player.StartCoroutine(player.WaitBeforeJump());
             }
-            if (player.noJumpingTimer >= 0.0f) { player.noJumpingTimer -= Time.deltaTime; Debug.Log("noJumpingTimer == " + player.noJumpingTimer); }
+            if (player.noJumpingTimer >= 0.0f) { player.noJumpingTimer -= Time.deltaTime; 
+                //Debug.Log("noJumpingTimer == " + player.noJumpingTimer);
+                }
 
             if (Input.GetKey(KeyCode.F) && player.CheckGrounded() && !player.Flames.gameObject.activeSelf)
             {
-                Debug.Log("activate flames");
                 player._Anim.SetBool("ShootingFire", true); 
                 player.Flames.gameObject.SetActive(true); 
             }

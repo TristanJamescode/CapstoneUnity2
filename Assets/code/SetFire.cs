@@ -4,15 +4,13 @@ using UnityEngine;
 
 public class SetFire : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    private void OnTriggerEnter(Collider GObj)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        Debug.Log("Collided with:" + GObj); 
+        if(GObj.gameObject.tag == "CanCatchFire")
+        {
+            //This is where we set an object on fire. 
+            GObj.GetComponent<FireManager>().Fire.SetActive(true); 
+        }
     }
 }

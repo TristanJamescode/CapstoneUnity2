@@ -8,6 +8,7 @@ public class GameOverTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        Debug.Log("collided with: " + other.gameObject); 
         if(other.gameObject.tag == "Player")
         {
             GameOverScreen.SetActive(true); 

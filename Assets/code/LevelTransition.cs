@@ -14,7 +14,7 @@ public class LevelTransition : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
-            SceneManager.LoadScene("MainArea");
+            SceneManager.LoadScene("Mainmenu");
         }
     }
 }
