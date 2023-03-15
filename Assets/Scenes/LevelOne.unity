@@ -2801,6 +2801,11 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 6345756066235838350, guid: 111f1837d9705604f9a2b2037db58082, type: 3}
   m_PrefabInstance: {fileID: 899051082}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1329581607 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1195619482410762186, guid: 940ec100106acc8408ebfaf6063d4b48, type: 3}
+  m_PrefabInstance: {fileID: 1603140319}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1343550049
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3290,6 +3295,20 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 2007586432365978992, guid: 940ec100106acc8408ebfaf6063d4b48, type: 3}
   m_PrefabInstance: {fileID: 1603140319}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1457643228
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1329581607}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 279dfdf5f96c12c43944de94f4c62007, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GameOverScreen: {fileID: 1089237848}
+  threshold: 160
 --- !u!1 &1519773640
 GameObject:
   m_ObjectHideFlags: 0
@@ -5094,6 +5113,10 @@ PrefabInstance:
     - target: {fileID: 3186304119598910493, guid: 79f3e35d98dc3f944af69d9afee92c89, type: 3}
       propertyPath: m_Name
       value: GameOverBarrier
+      objectReference: {fileID: 0}
+    - target: {fileID: 3186304119598910493, guid: 79f3e35d98dc3f944af69d9afee92c89, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3186304119598910494, guid: 79f3e35d98dc3f944af69d9afee92c89, type: 3}
       propertyPath: m_Size.y
