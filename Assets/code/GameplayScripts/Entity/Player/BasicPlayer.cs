@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class BasicPlayer : BasicEntity
 {
     private CharacterController controller;
+    [Header("Mana")]
     public float Mana = 100; // Mana
     public float Mana_max = 100; // Mana Max
     private bool IsAlive = true; 
@@ -14,8 +15,20 @@ public class BasicPlayer : BasicEntity
     protected float Mana_Regen_Delay = 10;
     [SerializeField] GameObject HealthBar;
     [SerializeField] GameObject ManaBar;
+    //[SerializeField] GameObject PlayerUI;
     [SerializeField] AudioSource DeathSound;
     [SerializeField] Animator myAnim;
+    protected override void Start()
+    {
+        base.Start();
+        /*
+        if (!GameObject.FindGameObjectWithTag("PlayerUI"))
+        {
+            Instantiate(PlayerUI,, Quaternion.identity);
+        }
+        GameObject UI = GameObject.FindGameObjectWithTag("PlayerUI");
+        */
+    }
     protected override void Update()
     {
         base.Update();

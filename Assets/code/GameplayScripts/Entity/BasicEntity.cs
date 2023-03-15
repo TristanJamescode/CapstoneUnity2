@@ -6,9 +6,10 @@ using UnityEngine;
 /// </summary>
 public class BasicEntity : MonoBehaviour
 {
+    [Header("Health")]
     public float Health = 100; // Health
     public float Health_Max = 100; // Health Max
-    public float Invincible_Time = 0;
+    protected float Invincible_Time = 0;
     protected bool Invincible = false;
     //knockback value
     protected Vector3 Knockback_Velocity;

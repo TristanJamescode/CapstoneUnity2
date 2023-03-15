@@ -23,7 +23,7 @@ public class PlayerControl : MonoBehaviour
     [SerializeField] GameObject AttackBox;
     [SerializeField] private LayerMask Layer_enemy;
     private BoxCollider AttackCollider;
-    private PlayerMana MyMana;
+    private BasicPlayer _BasicPlayer;
     private GameObject ObjInFrontOfPlayer;
     public bool IsAttacking = false;
     [SerializeField] private Transform cameraTransform;
@@ -60,13 +60,12 @@ public class PlayerControl : MonoBehaviour
             // Changes the height position of the player..
             if (Input.GetButtonDown("Jump") && player.CheckGrounded() && player.noJumpingTimer <= 0.0f)
             {
-                player._Anim.SetTrigger("JumpReady");
                 player.noJumpingTimer = player.noJumpingTime; Debug.Log("noJumpingTimer == " + player.noJumpingTimer);
                 player.StartCoroutine(player.WaitBeforeJump());
             }
             if (player.noJumpingTimer >= 0.0f) { player.noJumpingTimer -= Time.deltaTime; 
                 //Debug.Log("noJumpingTimer == " + player.noJumpingTimer);
-                }
+            }
 
             if (Input.GetKey(KeyCode.F) && player.CheckGrounded() && !player.Flames.gameObject.activeSelf)
             {
@@ -264,11 +263,11 @@ public class PlayerControl : MonoBehaviour
     }
     private void Run(Vector3 move)
     {
-        if(MyMana.mana > 0)
+        if(_BasicPlayer.Mana > 0)
         {
             controller.Move(move * Time.deltaTime * (playerSpeed * 3));
             _Anim.SetFloat("Speed", 2, 0.1f, Time.deltaTime);
-            MyMana.DecreasedMana(10.0f * Time.deltaTime);
+            _BasicPlayer.Mana_Use(10.0f * Time.deltaTime);
         }
         else
         {
@@ -340,7 +339,7 @@ public class PlayerControl : MonoBehaviour
         controller = this.gameObject.GetComponent<CharacterController>();
         _Anim = this.gameObject.GetComponent<Animator>();
         AttackCollider = AttackBox.GetComponent<BoxCollider>();
-        MyMana = this.gameObject.GetComponent<PlayerMana>();
+        _BasicPlayer = this.gameObject.GetComponent<BasicPlayer>();
     }
     void Update()
     {

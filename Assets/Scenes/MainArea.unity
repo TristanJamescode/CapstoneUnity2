@@ -3970,7 +3970,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Health: 100
   Health_Max: 100
-  Invincible_Time: 0
   agent: {fileID: 1798767673}
   Player: {fileID: 0}
   whatIsGround:
@@ -4464,6 +4463,14 @@ PrefabInstance:
       propertyPath: ManaBar
       value: 
       objectReference: {fileID: 1137258519}
+    - target: {fileID: 1952061844, guid: 940ec100106acc8408ebfaf6063d4b48, type: 3}
+      propertyPath: ManaBar
+      value: 
+      objectReference: {fileID: 1137258519}
+    - target: {fileID: 1952061844, guid: 940ec100106acc8408ebfaf6063d4b48, type: 3}
+      propertyPath: HealthBar
+      value: 
+      objectReference: {fileID: 1109467680}
     - target: {fileID: 1952061844, guid: 940ec100106acc8408ebfaf6063d4b48, type: 3}
       propertyPath: DeathSound
       value: 

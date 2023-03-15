@@ -45,26 +45,30 @@ public class BasicProjectile : BasicEntity
             other.GetComponent<BasicEntity>().Take_Damage(Projectile_Damage);
             Vector3 KnockbackDirection = other.transform.position - transform.position;
             other.GetComponent<BasicEntity>().Take_Knockback(5, KnockbackDirection);
-            OnDeath();
+            this.OnDeath();
         }
     }
     protected virtual void OnCollisionEnter(Collision collision)
     {
         if (ShootingFrom == null) return;
         if(collision.collider.CompareTag("Untagged")){ //hit with no tag
-            //Debug.Log("Ishit");
             collisions++;
             maxLifetime -= 1.0f;
-            if (collisions > collisions_max) OnDeath();
+            if (collisions > collisions_max) this.OnDeath();
         }
         else if(collision.collider.CompareTag(ShootingFrom.tag)) //it hit to shooting owner
         {
+            collisions++;
+            maxLifetime -= 1.0f;
+            if (collisions > collisions_max) this.OnDeath();
         } 
         else if(!collision.collider.CompareTag(this.tag)) 
         {
+            //Debug.Log(collision.collider.tag);
             collision.collider.GetComponent<BasicEntity>().Take_Damage(Projectile_Damage);
             Vector3 KnockbackDirection = collision.collider.transform.position - transform.position;
             collision.collider.GetComponent<BasicEntity>().Take_Knockback(20, KnockbackDirection);
+            //Debug.Log("2");
             this.OnDeath();
         }
     }
