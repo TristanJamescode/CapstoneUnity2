@@ -32,6 +32,16 @@ public class BasicEntity : MonoBehaviour
         }
         Invincible = IsInvicible;
     }
+
+    public virtual IEnumerator Burn()
+    {
+        yield return new WaitForSeconds(3);
+        Take_Damage(20.0f);
+        yield return new WaitForSeconds(3);
+        Take_Damage(20.0f);
+        yield return new WaitForSeconds(3);
+        Take_Damage(20.0f); 
+    }
     public virtual void Update_KnockbackRelated(){
         if (Knockback_Counter > 0) Knockback_Counter -= Time.deltaTime;
     }

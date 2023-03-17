@@ -6,6 +6,7 @@ using UnityEngine.AI;
 public class BasicEnemy : BasicEntity
 {
     //[SerializeField] private Rigidbody body;
+    [SerializeField] private GameObject fire; 
     public NavMeshAgent agent;
     public Transform Player;
     public LayerMask whatIsGround, whatIsPlayer;
@@ -104,6 +105,23 @@ public class BasicEnemy : BasicEntity
             enemy.AttackPlayer();
         }
     }
+
+    protected class OnFireState : BaseState
+    {
+        BasicEnemy enemy; 
+        public OnFireState(BasicEnemy enemy, string name, StateMachine stateMachine) : base(name, stateMachine)
+        {
+            this.enemy = enemy; 
+        }
+
+        public override void OnEnter()
+        {
+            enemy.fire.SetActive(true);
+            enemy.StartCoroutine(enemy.Burn()); 
+        }
+    }
+
+
     protected class StunState : BaseState
     {
         BasicEnemy enemy;
@@ -188,7 +206,7 @@ public class BasicEnemy : BasicEntity
             return returnbool;
         }
     }
-    protected BaseState State_Idle, State_Patrol, State_Chasing, State_Attacking, State_Stun;
+    protected BaseState State_Idle, State_Patrol, State_Chasing, State_Attacking, State_Stun, State_OnFire;
     protected virtual void Awake()
     {
         if (Player == null && GameObject.FindGameObjectWithTag("Player") != null) { Player = GameObject.FindGameObjectWithTag("Player").transform; } //Find Player if exists
@@ -199,6 +217,7 @@ public class BasicEnemy : BasicEntity
         State_Chasing = new ChasingState(this, "Chasing", _StateMachine);
         State_Attacking = new AttackingState(this, "Attacking", _StateMachine);
         State_Stun = new StunState(this, "Stun", _StateMachine);
+        State_OnFire = new OnFireState(this, "OnFire", _StateMachine); 
 
         Transaction idletopatrol = new(State_Patrol);
         Transaction idletochasing = new(State_Chasing);
@@ -244,6 +263,11 @@ public class BasicEnemy : BasicEntity
         Player = GameObject.FindGameObjectWithTag("Player").transform;
         agent = GetComponent<NavMeshAgent>();
         _StateMachine.setInitState(State_Idle);
+    }
+
+    public void ChangeState_OnFire()
+    {
+        _StateMachine.ChangeState(State_OnFire); 
     }
     protected override void Update()
     {

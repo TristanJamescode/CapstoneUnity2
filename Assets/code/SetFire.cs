@@ -12,5 +12,9 @@ public class SetFire : MonoBehaviour
             //This is where we set an object on fire. 
             GObj.GetComponent<FireManager>().Fire.SetActive(true); 
         }
+        else if (GObj.gameObject.tag == "Enemy")
+        {
+            GObj.GetComponent<BasicEnemy>().ChangeState_OnFire(); 
+        }
     }
 }
