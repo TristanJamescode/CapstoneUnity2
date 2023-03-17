@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6442225329708872901}
   m_Layer: 6
   m_Name: Body
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -47,7 +47,7 @@ GameObject:
   - component: {fileID: 8845184346547153240}
   m_Layer: 0
   m_Name: Head
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -175,7 +175,7 @@ GameObject:
   - component: {fileID: 7092862733367231523}
   m_Layer: 6
   m_Name: Nose
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -372,8 +372,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Health: 100
   Health_Max: 100
-  Invincible_Time: 0
-  body: {fileID: 0}
   agent: {fileID: 7092862734954859707}
   Player: {fileID: 0}
   whatIsGround:

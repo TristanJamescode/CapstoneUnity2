@@ -20,17 +20,14 @@ public class PlayerControl : MonoBehaviour
     private float noJumpingTimer = 0.0f; //Used to prevent jump inputs in quick succession from allowing players to jump really high.
     [SerializeField] private float noJumpingTime = 2.2f; //This one is used to let us adjust the timing of the grce period in the editor.
 
-    [SerializeField] GameObject AttackBox;
+    [SerializeField] GameObject _HitBoxObject;
     [SerializeField] private LayerMask Layer_enemy;
-    private BoxCollider AttackCollider;
     private BasicPlayer _BasicPlayer;
+    private HitBoxCollision _HitBoxCollision;
     private GameObject ObjInFrontOfPlayer;
     public bool IsAttacking = false;
     [SerializeField] private Transform cameraTransform;
     [SerializeField] private ParticleSystem Flames;
-
-    //[Header("References-Climing")]
-    //public LayerMask whatIsWall;
 
     [Header("Climbing")]
     public float climbSpeed;
@@ -223,21 +220,26 @@ public class PlayerControl : MonoBehaviour
         }
         return false; 
     }
-    IEnumerator PunchAttack(Collider AttackCollider)
+    IEnumerator PunchAttack()
     {
         _Anim.SetBool("Attack", true);
         IsAttacking = true;
-        Collider[] cols = Physics.OverlapBox(AttackCollider.bounds.center, AttackCollider.bounds.extents,
-           AttackCollider.transform.rotation, Layer_enemy); 
+        _HitBoxCollision.ChangeDamage(50);
+        /*
         foreach(Collider c in cols)
         {
             Debug.Log(c.gameObject.name);
             c.GetComponentInParent<BasicEnemy>().Take_Damage(50);
             c.GetComponentInParent<BasicEnemy>().Take_Knockback(2, c.gameObject.transform.position-this.transform.position);
         }
+        */
         yield return new WaitForSeconds(1.90f);
         _Anim.SetBool("Attack", false);
         IsAttacking = false; 
+    }
+    private void Attack_Kick()
+    {
+
     }
     IEnumerator WaitBeforeJump()
     {
@@ -338,8 +340,8 @@ public class PlayerControl : MonoBehaviour
 
         controller = this.gameObject.GetComponent<CharacterController>();
         _Anim = this.gameObject.GetComponent<Animator>();
-        AttackCollider = AttackBox.GetComponent<BoxCollider>();
         _BasicPlayer = this.gameObject.GetComponent<BasicPlayer>();
+        _HitBoxCollision = _HitBoxObject.GetComponent<HitBoxCollision>();
     }
     void Update()
     {
@@ -348,7 +350,7 @@ public class PlayerControl : MonoBehaviour
         statename = _StateMachine.currentState.name;
         if (Input.GetKeyDown(KeyCode.E))
         {
-            StartCoroutine(PunchAttack(AttackCollider));
+            StartCoroutine(PunchAttack());
         }
     }
     private void FixedUpdate()
