@@ -45,7 +45,7 @@ GameObject:
   - component: {fileID: 6439149394609565973}
   - component: {fileID: 1549543002975038074}
   - component: {fileID: 8845184346547153240}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Head
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -372,6 +372,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Health: 100
   Health_Max: 100
+  fire: {fileID: 0}
   agent: {fileID: 7092862734954859707}
   Player: {fileID: 0}
   whatIsGround:

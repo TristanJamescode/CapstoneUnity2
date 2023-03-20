@@ -53,7 +53,7 @@ public class PlayerControl : MonoBehaviour
         }
         public override void Update()
         {
-            player.Move();
+            if(!player.IsAttacking)player.Move();
             // Changes the height position of the player..
             if (Input.GetButtonDown("Jump") && player.CheckGrounded() && player.noJumpingTimer <= 0.0f)
             {
@@ -62,6 +62,14 @@ public class PlayerControl : MonoBehaviour
             }
             if (player.noJumpingTimer >= 0.0f) { player.noJumpingTimer -= Time.deltaTime; 
                 //Debug.Log("noJumpingTimer == " + player.noJumpingTimer);
+            }
+
+            if (player._ControlInputs.attack)
+            {
+                player.StartCoroutine(player.Attack_Punch());
+            } else if (player._ControlInputs.subattack)
+            {
+                player.StartCoroutine(player.Attack_Kick());
             }
 
             if (Input.GetKey(KeyCode.F) && player.CheckGrounded() && !player.Flames.gameObject.activeSelf)
@@ -185,6 +193,8 @@ public class PlayerControl : MonoBehaviour
         }
     }
     private struct ControlInputs{
+        public bool attack, attack_hold;
+        public bool subattack, subattack_hold;
         public bool jump,jump_hold;
         public float axis_Horizontal, axis_Vertical;
         public bool run;
@@ -220,26 +230,25 @@ public class PlayerControl : MonoBehaviour
         }
         return false; 
     }
-    IEnumerator PunchAttack()
+    IEnumerator Attack_Punch()
     {
+        _Anim.SetInteger("AttackType", 0);
         _Anim.SetBool("Attack", true);
         IsAttacking = true;
-        _HitBoxCollision.ChangeDamage(50);
-        /*
-        foreach(Collider c in cols)
-        {
-            Debug.Log(c.gameObject.name);
-            c.GetComponentInParent<BasicEnemy>().Take_Damage(50);
-            c.GetComponentInParent<BasicEnemy>().Take_Knockback(2, c.gameObject.transform.position-this.transform.position);
-        }
-        */
-        yield return new WaitForSeconds(1.90f);
+        _HitBoxCollision.ChangeDamage(20);
+        yield return new WaitForSeconds(1.50f);
         _Anim.SetBool("Attack", false);
         IsAttacking = false; 
     }
-    private void Attack_Kick()
+    IEnumerator Attack_Kick()
     {
-
+        _Anim.SetInteger("AttackType", 1);
+        _Anim.SetBool("Attack", true);
+        IsAttacking = true;
+        _HitBoxCollision.ChangeDamage(35);
+        yield return new WaitForSeconds(1.50f);
+        _Anim.SetBool("Attack", false);
+        IsAttacking = false;
     }
     IEnumerator WaitBeforeJump()
     {
@@ -250,6 +259,10 @@ public class PlayerControl : MonoBehaviour
     }
     private void GetInputs()
     {
+        _ControlInputs.attack = Input.GetButtonDown("Attack");
+        _ControlInputs.attack_hold = Input.GetButton("Attack");
+        _ControlInputs.subattack = Input.GetButtonDown("SubAttack");
+        _ControlInputs.subattack_hold = Input.GetButton("SubAttack");
         _ControlInputs.jump = Input.GetButtonDown("Jump");
         _ControlInputs.jump_hold = Input.GetButton("Jump");
         _ControlInputs.axis_Horizontal = Input.GetAxis("Horizontal");
@@ -348,10 +361,6 @@ public class PlayerControl : MonoBehaviour
         GetInputs();
         _StateMachine.Update();
         statename = _StateMachine.currentState.name;
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            StartCoroutine(PunchAttack());
-        }
     }
     private void FixedUpdate()
     {
