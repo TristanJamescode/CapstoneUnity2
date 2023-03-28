@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: 2d49bfd50efe17c4fb207fb7ee28efa2, type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -1709,7 +1709,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2c822dfc330bc184aa8b8b2593d198cd, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 2c822dfc330bc184aa8b8b2593d198cd, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2252,7 +2252,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   GameOverScreen: {fileID: 1354537377}
-  threshold: 0
+  threshold: 150
 --- !u!114 &445586317
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6956,7 +6956,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2007586432365978992, guid: 940ec100106acc8408ebfaf6063d4b48, type: 3}
       propertyPath: m_RootOrder
-      value: 2
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 2007586432365978992, guid: 940ec100106acc8408ebfaf6063d4b48, type: 3}
       propertyPath: m_LocalPosition.x
