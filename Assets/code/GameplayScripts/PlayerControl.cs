@@ -34,6 +34,8 @@ public class PlayerControl : MonoBehaviour
     public float maxClimbTime;
     private float climbTimer;
     private bool B_Inf_Climbing;
+    public bool PlayerClimbTop;
+    public Transform ClimbTarget; 
     //Anims
     private Animator _Anim;
     //States
@@ -142,6 +144,14 @@ public class PlayerControl : MonoBehaviour
                 }
             }
 
+            if(player.PlayerClimbTop)
+            {
+                player.StartCoroutine(player.Climb_To_Top());
+                player.PlayerClimbTop = false;
+                player._Anim.SetBool("AtTop", false); 
+                stateMachine.ChangeState(player.State_Air); 
+            }
+
             if (!player.B_Inf_Climbing) player.climbTimer -= Time.deltaTime;
             if (player._ControlInputs.axis_Vertical != 0)
             {
@@ -239,6 +249,13 @@ public class PlayerControl : MonoBehaviour
         yield return new WaitForSeconds(1.50f);
         _Anim.SetBool("Attack", false);
         IsAttacking = false; 
+    }
+
+    IEnumerator Climb_To_Top()
+    {
+        PlayerClimbTop = true;
+        _Anim.SetBool("AtTop", true);
+        yield return new WaitForSeconds(5.0f); 
     }
     IEnumerator Attack_Kick()
     {

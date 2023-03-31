@@ -7,7 +7,7 @@ public class PlatformMovement : MonoBehaviour
 {
     [SerializeField] Transform start;
     [SerializeField] Transform end;
-    private float time = 20;
+    [SerializeField] float time;
 
     private Rigidbody rb;
     private Vector3 currentPosition;
