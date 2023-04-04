@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityEngine.UI;
 public class BasicPlayer : BasicEntity
 {
@@ -18,6 +19,10 @@ public class BasicPlayer : BasicEntity
     //[SerializeField] GameObject PlayerUI;
     [SerializeField] AudioSource DeathSound;
     [SerializeField] Animator myAnim;
+    //death
+    [SerializeField] GameObject GameOverScreen;
+    //public float threshold;
+    //
     protected override void Start()
     {
         base.Start();
@@ -51,6 +56,16 @@ public class BasicPlayer : BasicEntity
             if (Knockback_Velocity.magnitude < 0.5f) Knockback_Velocity = Vector3.zero;
         }
     }
+    //teleport trigger code
+    public void Teleport(Vector3 position, Quaternion rotation)
+    {
+        transform.position = position;
+        Physics.SyncTransforms();
+       //LookAtConstraint.x = rotation.eulerAngles.x;
+       
+    }
+
+    //
     public override void OnDeath()
     {
         if(IsAlive)
@@ -58,7 +73,9 @@ public class BasicPlayer : BasicEntity
             DeathSound.Play();
             Debug.Log("Player Is Dead");
             myAnim.SetBool("IsDead", true);
-            IsAlive = false; 
+            IsAlive = false;
+            GameOverScreen.SetActive(true);
+            Destroy(gameObject);
         }
     }
     public override void Take_Heal(float Heal_)

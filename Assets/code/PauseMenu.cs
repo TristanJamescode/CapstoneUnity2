@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 //Source:
 //https://www.youtube.com/watch?v=w3KeuE-11GU&t=733s
@@ -78,6 +79,7 @@ public class PauseMenu : MonoBehaviour
     public void RestartButton()
     {
         // Play Now Button has been pressed, here you can initialize your game (For example Load a Scene called GameLevel etc.)
-        UnityEngine.SceneManagement.SceneManager.LoadScene("MainArea");
+        //UnityEngine.SceneManagement.SceneManager.LoadScene("MainArea");
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

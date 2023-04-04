@@ -14,7 +14,7 @@ public class LevelOneStart : MonoBehaviour
     {
         if(other.gameObject.tag == "Player")
         {
-            SceneManager.LoadScene("LevelOne"); 
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         }
     }
 }
