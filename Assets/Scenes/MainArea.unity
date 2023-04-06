@@ -2275,6 +2275,36 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 2, z: 1}
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &445586323
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 445586313}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4d091a30e6fc4b44fbd7d8649ceb64a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  HealthBar: {fileID: 1109467680}
+  maxHealth: 100
+  AudioS: {fileID: 0}
+--- !u!114 &445586324
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 445586313}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e67a2a147c63caa4da1f44f94759069d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ManaBar: {fileID: 1137258519}
+  mana: 0
+  maxMana: 100
 --- !u!1 &518173828
 GameObject:
   m_ObjectHideFlags: 0
@@ -2533,6 +2563,10 @@ PrefabInstance:
     - target: {fileID: 1031838921458249362, guid: 42a2ee6d7700b854b94fb5a88392199e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4451707157967900394, guid: 42a2ee6d7700b854b94fb5a88392199e, type: 3}
+      propertyPath: Manawaste
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 9201687052044125729, guid: 42a2ee6d7700b854b94fb5a88392199e, type: 3}
       propertyPath: m_Name
@@ -5073,6 +5107,10 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 2167201900747609246, guid: 99d4a5f9d094610478f8ed9bf729446a, type: 3}
+      propertyPath: damageAmount
+      value: -10
+      objectReference: {fileID: 0}
     - target: {fileID: 5095172660360434723, guid: 99d4a5f9d094610478f8ed9bf729446a, type: 3}
       propertyPath: m_RootOrder
       value: 24
@@ -5121,7 +5159,8 @@ PrefabInstance:
       propertyPath: m_Name
       value: healup
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 2167201900747609241, guid: 99d4a5f9d094610478f8ed9bf729446a, type: 3}
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 99d4a5f9d094610478f8ed9bf729446a, type: 3}
 --- !u!1 &1354537377 stripped
