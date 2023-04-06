@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+//link to original code: https://www.youtube.com/watch?v=I7M8T3qU-_E
 public class Portal : MonoBehaviour
 {
     [SerializeField] Transform destination;

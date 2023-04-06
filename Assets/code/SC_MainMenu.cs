@@ -36,6 +36,6 @@ public class SC_MainMenu : MonoBehaviour
     public void QuitButton()
     {
         Application.Quit(); //for the actual game
-        UnityEditor.EditorApplication.isPlaying = false; //for the unity player
+        //UnityEditor.EditorApplication.isPlaying = false; //for the unity player
     }
 }
