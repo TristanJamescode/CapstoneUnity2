@@ -15,17 +15,17 @@ public class DamageDealer : MonoBehaviour
             health.DecreasedHealth(damageAmount);
         } */
 
-        if(collision.gameObject.TryGetComponent(out PlayerHealth health))
+        if(collision.gameObject.TryGetComponent(out BasicPlayer health))
         {
-            health.DecreasedHealth(damageAmount);
+            health.Take_Damage(damageAmount); 
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.TryGetComponent(out PlayerHealth health))
+        if (other.gameObject.TryGetComponent(out BasicPlayer health))
         {
-            health.DecreasedHealth(damageAmount);
+            health.Take_Damage(damageAmount); 
         }
     }
 }

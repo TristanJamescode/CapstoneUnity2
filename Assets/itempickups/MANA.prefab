@@ -36,7 +36,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 21
+  m_RootOrder: 22
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &4451707157967900397
 MeshFilter:
@@ -126,7 +126,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f4b5c2a0c4f25643927a006694b3d79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Manawaste: -20
+  Manawaste: -10
 --- !u!114 &4451707157967900393
 MonoBehaviour:
   m_ObjectHideFlags: 0

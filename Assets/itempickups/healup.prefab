@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 2167201900747609244}
   - component: {fileID: 2167201900747609245}
   - component: {fileID: 2167201900747609246}
-  - component: {fileID: 2167201900747609241}
   - component: {fileID: 2167201900747609240}
   - component: {fileID: 2167201900747609255}
   m_Layer: 0
@@ -36,7 +35,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 24
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &2167201900747609243
 MeshFilter:
@@ -113,20 +112,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ecd7fbd1c5dfa84291431d9c9d17484, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 0
---- !u!114 &2167201900747609241
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7305270203827720054}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9f4b5c2a0c4f25643927a006694b3d79, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Manawaste: 0
+  damageAmount: -10
 --- !u!114 &2167201900747609240
 MonoBehaviour:
   m_ObjectHideFlags: 0

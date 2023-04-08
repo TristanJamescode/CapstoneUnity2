@@ -131,12 +131,13 @@ public class BasicPlayer : BasicEntity
     }
     public virtual void UpdateHealthBar()
     {
+        Debug.Log("Player Health is: " + Health); 
         float fillAmount = Health / Health_Max;
         if (fillAmount > 1)
         {
             fillAmount = 1;
         }
-        HealthBar.GetComponent<Image>().fillAmount = fillAmount;
+        Debug.Log(HealthBar.GetComponent<Image>().fillAmount = fillAmount);
     }
     public virtual void UpdateManaBar()
     {

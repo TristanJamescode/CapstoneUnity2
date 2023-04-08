@@ -59,7 +59,7 @@ public class PlayerControl : MonoBehaviour
             // Changes the height position of the player..
             if (Input.GetButtonDown("Jump") && player.CheckGrounded() && player.noJumpingTimer <= 0.0f)
             {
-                player.noJumpingTimer = player.noJumpingTime; Debug.Log("noJumpingTimer == " + player.noJumpingTimer);
+                player.noJumpingTimer = player.noJumpingTime; //Debug.Log("noJumpingTimer == " + player.noJumpingTimer);
                 player.StartCoroutine(player.WaitBeforeJump());
             }
             if (player.noJumpingTimer >= 0.0f) { player.noJumpingTimer -= Time.deltaTime; 

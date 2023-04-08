@@ -1834,6 +1834,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: -796397466119593081, guid: 2c822dfc330bc184aa8b8b2593d198cd, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: -751476226918971245, guid: 2c822dfc330bc184aa8b8b2593d198cd, type: 3}
       propertyPath: m_Layer
       value: 3
@@ -1909,6 +1913,10 @@ PrefabInstance:
     - target: {fileID: 1395463999563580269, guid: 2c822dfc330bc184aa8b8b2593d198cd, type: 3}
       propertyPath: m_Layer
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1395463999563580269, guid: 2c822dfc330bc184aa8b8b2593d198cd, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1651751833402825144, guid: 2c822dfc330bc184aa8b8b2593d198cd, type: 3}
       propertyPath: m_Layer
@@ -5159,8 +5167,7 @@ PrefabInstance:
       propertyPath: m_Name
       value: healup
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 2167201900747609241, guid: 99d4a5f9d094610478f8ed9bf729446a, type: 3}
+    m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 99d4a5f9d094610478f8ed9bf729446a, type: 3}
 --- !u!1 &1354537377 stripped
