@@ -73,17 +73,8 @@ public class PlayerControl : MonoBehaviour
             {
                 player.StartCoroutine(player.Attack_Kick());
             }
-
-            if (Input.GetKey(KeyCode.F) && player.CheckGrounded() && !player.Flames.gameObject.activeSelf)
-            {
-                player._Anim.SetBool("ShootingFire", true); 
-                player.Flames.gameObject.SetActive(true); 
-            }
-            else if (Input.GetKeyUp(KeyCode.F) && player.Flames.gameObject.activeSelf || !player.CheckGrounded() && player.Flames.gameObject.activeSelf)
-            {
-                player._Anim.SetBool("ShootingFire", false); 
-                player.Flames.gameObject.SetActive(false); 
-            }
+            //Lets the Player shoot fire with the Flamethrower
+            player.FlameThrow(); 
         }
     }
     protected class AirState : BaseState
@@ -295,16 +286,39 @@ public class PlayerControl : MonoBehaviour
     }
     private void Run(Vector3 move)
     {
-        if(_BasicPlayer.Mana > 0)
+        if(_BasicPlayer.Mana > 1)
         {
             controller.Move(move * Time.deltaTime * (playerSpeed * 3));
             _Anim.SetFloat("Speed", 2, 0.1f, Time.deltaTime);
-            _BasicPlayer.Mana_Use(10.0f * Time.deltaTime);
+            Debug.Log(_BasicPlayer.Mana_Use(10.0f * Time.deltaTime));
         }
         else
         {
             _Anim.SetFloat("Speed", 1.2f, 0.1f, Time.deltaTime);
             controller.Move(move * Time.deltaTime * playerSpeed); 
+        }
+    }
+
+    private void FlameThrow()
+    {
+        if (Input.GetKey(KeyCode.F) && CheckGrounded())
+        {
+            if (_BasicPlayer.Mana_Use(10.0f * Time.deltaTime))
+            {
+                _Anim.SetBool("ShootingFire", true);
+                Flames.gameObject.SetActive(true);
+            }
+            else
+            {
+                _Anim.SetBool("ShootingFire", false);
+                Flames.gameObject.SetActive(false); 
+            }
+        }
+
+        else if (Input.GetKeyUp(KeyCode.F) || !CheckGrounded())
+        {
+            _Anim.SetBool("ShootingFire", false);
+            Flames.gameObject.SetActive(false);
         }
     }
     private void Move()

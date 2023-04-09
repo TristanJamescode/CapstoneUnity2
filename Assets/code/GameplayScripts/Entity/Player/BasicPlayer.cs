@@ -115,7 +115,11 @@ public class BasicPlayer : BasicEntity
     }
     public virtual bool Mana_Check(float ManaUse_)
     {
-        if (Mana < ManaUse_) return false;
+        if (Mana < ManaUse_)
+        {
+                return false;
+        }
+           
         return true;
     }
     public virtual void Mana_Regen()

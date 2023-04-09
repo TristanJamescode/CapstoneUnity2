@@ -22,6 +22,7 @@ public class ManaWaster : MonoBehaviour
         if(collision.gameObject.TryGetComponent(out BasicPlayer player))
         {
             player.Mana_Use(80);
+            player.Mana_Gain(-Manawaste); 
         }
     }
 
@@ -34,6 +35,7 @@ public class ManaWaster : MonoBehaviour
         if (other.gameObject.TryGetComponent(out BasicPlayer player))
         {
             player.Mana_Use(80);
+            player.Mana_Gain(-Manawaste); 
         }
     }
 }

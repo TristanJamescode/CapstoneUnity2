@@ -129,7 +129,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Health: 100
   Health_Max: 100
-  Invincible_Time: 0
   whatIsEnemies:
     serializedVersion: 2
     m_Bits: 64
@@ -138,6 +137,6 @@ MonoBehaviour:
     m_Bits: 8
   useGravity: 0
   collisions_max: 1
-  maxLifetime: 10
+  maxLifetime: 6.18
   ShootingFrom: {fileID: 0}
   Projectile_Damage: 10
