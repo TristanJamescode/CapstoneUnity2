@@ -12,9 +12,13 @@ public class LevelOneStart : MonoBehaviour
     }
     private void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.tag == "Player")
+        if(other.gameObject.tag == "Player" && SceneManager.GetActiveScene().name != "LevelThree")
         {
             SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        }
+        else if(SceneManager.GetActiveScene().name == "LevelThree" && other.gameObject.tag == "Player")
+        {
+            SceneManager.LoadScene("MainArea"); 
         }
     }
 }

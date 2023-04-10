@@ -12,13 +12,12 @@ GameObject:
   - component: {fileID: 4451707157967900397}
   - component: {fileID: 4451707157967900398}
   - component: {fileID: 4451707157967900399}
-  - component: {fileID: 4451707157967900395}
   - component: {fileID: 4451707157967900394}
   - component: {fileID: 4451707157967900393}
   - component: {fileID: 4451707157967900392}
   m_Layer: 0
   m_Name: MANA
-  m_TagString: Untagged
+  m_TagString: Mana
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -101,19 +100,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &4451707157967900395
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9201687052044125729}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5ecd7fbd1c5dfa84291431d9c9d17484, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damageAmount: 0
 --- !u!114 &4451707157967900394
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -126,7 +112,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f4b5c2a0c4f25643927a006694b3d79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Manawaste: -10
+  Manawaste: -100
 --- !u!114 &4451707157967900393
 MonoBehaviour:
   m_ObjectHideFlags: 0

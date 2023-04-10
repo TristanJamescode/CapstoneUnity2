@@ -290,7 +290,7 @@ public class PlayerControl : MonoBehaviour
         {
             controller.Move(move * Time.deltaTime * (playerSpeed * 3));
             _Anim.SetFloat("Speed", 2, 0.1f, Time.deltaTime);
-            Debug.Log(_BasicPlayer.Mana_Use(10.0f * Time.deltaTime));
+            _BasicPlayer.Mana_Use(10.0f * Time.deltaTime);
         }
         else
         {
