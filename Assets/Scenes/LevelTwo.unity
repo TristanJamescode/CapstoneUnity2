@@ -1511,9 +1511,17 @@ PrefabInstance:
       propertyPath: m_Name
       value: SteelWall
       objectReference: {fileID: 0}
+    - target: {fileID: 3652074195417479288, guid: bb1dd1f7bccd6af46af7d514d8110615, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 4190bd2c1ca0e9844a0cc93a84d083c1, type: 2}
     - target: {fileID: 3652074195417479290, guid: bb1dd1f7bccd6af46af7d514d8110615, type: 3}
       propertyPath: m_RootOrder
       value: 85
+      objectReference: {fileID: 0}
+    - target: {fileID: 3652074195417479290, guid: bb1dd1f7bccd6af46af7d514d8110615, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 23.05551
       objectReference: {fileID: 0}
     - target: {fileID: 3652074195417479290, guid: bb1dd1f7bccd6af46af7d514d8110615, type: 3}
       propertyPath: m_LocalPosition.x
