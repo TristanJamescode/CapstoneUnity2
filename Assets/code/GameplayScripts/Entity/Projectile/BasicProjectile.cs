@@ -42,6 +42,7 @@ public class BasicProjectile : BasicEntity
         if (ShootingFrom == null) return;
         if (other.tag != ShootingFrom.tag && other.tag != "Untagged")
         {
+            if (other.GetComponent<BasicEntity>() == null) return;
             other.GetComponent<BasicEntity>().Take_Damage(Projectile_Damage);
             Vector3 KnockbackDirection = other.transform.position - transform.position;
             other.GetComponent<BasicEntity>().Take_Knockback(5, KnockbackDirection);

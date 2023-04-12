@@ -13,7 +13,13 @@ public class SetFire : MonoBehaviour
         }
         else if (GObj.gameObject.tag == "Enemy")
         {
-            GObj.GetComponent<BasicEnemy>().ChangeState_OnFire(); 
+            if (GObj.GetComponent<BasicEnemy>() != null)
+            {
+                GObj.GetComponent<BasicEnemy>().ChangeState_OnFire();
+            } else if (GObj.GetComponentInParent<BasicEnemy>() != null)
+            {
+                GObj.GetComponentInParent<BasicEnemy>().ChangeState_OnFire();
+            }
         }
     }
 }
