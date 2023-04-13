@@ -2497,7 +2497,7 @@ MonoBehaviour:
   IsAttacking: 0
   cameraTransform: {fileID: 1886308638}
   Flames: {fileID: 637434945}
-  climbSpeed: 0.6
+  climbSpeed: 1
   maxClimbTime: 0
   PlayerClimbTop: 0
   ClimbTarget: {fileID: 0}
@@ -4331,7 +4331,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7092862734954859697, guid: df7b0493168170745a90d12ffbea4f14, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7092862734954859701, guid: df7b0493168170745a90d12ffbea4f14, type: 3}
       propertyPath: m_RootOrder
@@ -5935,7 +5935,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2028018639425267594, guid: f69a69bbf62690b42b17d846542c4770, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4821486647655231531, guid: f69a69bbf62690b42b17d846542c4770, type: 3}
       propertyPath: m_IsTrigger
